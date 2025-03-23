@@ -15,7 +15,8 @@ workflows:
           pod install --repo-update
       - name: Build iOS App
         script: |
-          flutter build ios --release --no-codesign  # Change to --codesign if you are using code-signing
+          cd ios_app
+          flutter build ios --release --no-codesign  # --codesign if you use code signing
       - name: Deploy to TestFlight
         script: |
           xcrun altool --upload-app -f build/ios/iphoneos/Runner.app -t ios --username "$APPLE_ID" --password "$APPLE_PASSWORD"
