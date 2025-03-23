@@ -51,6 +51,7 @@ jobs:
       - name: Build iOS app without signing
         run: |
           cd federated_slm_app
+          cd ios
           flutter build ios --no-codesign  # Build without signing
 
       # Archive and create .ipa (unsigned)
