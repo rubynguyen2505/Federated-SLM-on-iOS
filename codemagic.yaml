@@ -23,8 +23,5 @@ workflows:
         script: |
           echo "Listing contents of ios_app/build/ios/iphoneos"
           ls -R ios_app/build/ios/iphoneos
-      - name: Deploy to TestFlight
-        script: |
-          xcrun altool --upload-app -f ios_app/build/ios/iphoneos/Runner.app -t ios --username "$APPLE_ID" --password "$APPLE_PASSWORD"
     artifacts:
-      - build/ios/iphoneos/Runner.app
+      - ios_app/build/ios/iphoneos/Runner.ipa  # This should reference the .ipa file, not .app
