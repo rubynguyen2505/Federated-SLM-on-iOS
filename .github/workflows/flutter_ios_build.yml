@@ -4,36 +4,42 @@ on:
   push:
     branches:
       - master  # Set your branch
+  pull_request:
+    branches:
+      - master  # Set your branch
 
 jobs:
   build:
     runs-on: macos-latest  # Use the macOS runner
-    
+
     steps:
       # Checkout code from the repository
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       # Set up Flutter
       - name: Set up Flutter
-        uses: subosito/flutter-action@v2
+        uses: subosito/flutter-action@v4
         with:
           flutter-version: '3.13.6'  # Use your Flutter version
 
-      # Cache Flutter dependencies (optional)
-      - name: Cache Flutter dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-flutter-${{ hashFiles('**/pubspec.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-flutter-
+      # Install CocoaPods (necessary for iOS dependencies)
+      - name: Install CocoaPods
+        run: |
+          sudo gem install cocoapods
 
       # Install dependencies (flutter packages)
-      - name: Install dependencies
+      - name: Install Flutter dependencies
         run: |
           cd federated_slm_app
           flutter pub get
+
+      # Install iOS dependencies (CocoaPods)
+      - name: Install iOS CocoaPods dependencies
+        run: |
+          cd federated_slm_app
+          cd ios
+          pod install
 
       # Clean previous builds (optional but recommended)
       - name: Clean previous builds
@@ -51,13 +57,13 @@ jobs:
       - name: Archive and create .ipa (unsigned)
         run: |
           cd federated_slm_app
-          xcodebuild -workspace ios/Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/ios/build/Runner.xcarchive archive
-          xcodebuild -exportArchive -archivePath $PWD/ios/build/Runner.xcarchive -exportPath $PWD/ios/build/Runner.ipa -exportOptionsPlist /dev/null
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive
+          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportPath $PWD/build/Runner.ipa -exportOptionsPlist /dev/null
 
-      # Upload the .ipa file as an artifact (to download later)
+      # Optional: Upload the .ipa file as an artifact (to download later)
       - name: Upload .ipa as artifact
         uses: actions/upload-artifact@v4
         with:
           name: runner-ipa
           path: ios/build/Runner.ipa
-          
