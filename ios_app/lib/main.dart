@@ -13,20 +13,34 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   final FederatedModel model = FederatedModel();
   String inferenceResult = "Press the button to run inference";
+  bool _isModelLoaded = false;  // Track model loading state
 
   @override
   void initState() {
     super.initState();
-    model.loadModel();
+    _loadModel();
+  }
+
+  Future<void> _loadModel() async {
+    await model.loadModel();
+    setState(() {
+      _isModelLoaded = true; // Enable button after loading
+    });
   }
 
   Future<void> _runInference() async {
-    List<int> sampleInput = [1, 2, 3, 4, 5]; // Example input
-    List<double> result = await model.runInference(sampleInput);
+    try {
+      List<int> sampleInput = [1, 2, 3, 4, 5]; // Example input
+      List<double> result = await model.runInference(sampleInput);
 
-    setState(() {
-      inferenceResult = "Inference Result: ${result.join(", ")}";
-    });
+      setState(() {
+        inferenceResult = "Inference Result: ${result.join(", ")}";
+      });
+    } catch (e) {
+      setState(() {
+        inferenceResult = "Error: ${e.toString()}";
+      });
+    }
   }
 
   @override
@@ -41,8 +55,8 @@ class _MyAppState extends State<MyApp> {
               Text(inferenceResult, textAlign: TextAlign.center),
               SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _runInference,
-                child: Text("Run Inference"),
+                onPressed: _isModelLoaded ? _runInference : null, // Disable until loaded
+                child: Text(_isModelLoaded ? "Run Inference" : "Loading Model..."),
               ),
             ],
           ),
