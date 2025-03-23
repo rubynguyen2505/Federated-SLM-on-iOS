@@ -3,10 +3,10 @@ name: Build iOS App for iOS without signing
 on:
   push:
     branches:
-      - main  # Set your branch
+      - master  # Set your branch
   pull_request:
     branches:
-      - main  # Set your branch
+      - master  # Set your branch
 
 jobs:
   build:
