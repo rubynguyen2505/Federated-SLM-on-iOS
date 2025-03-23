@@ -23,16 +23,19 @@ jobs:
         with:
           flutter-version: '3.13.6'  # Use your Flutter version
 
-      # Install CocoaPods (necessary for iOS dependencies)
-      - name: Install CocoaPods
-        run: |
-          sudo gem install cocoapods
+      
 
       # Install dependencies (flutter packages)
       - name: Install Flutter dependencies
         run: |
           cd federated_slm_app
           flutter pub get
+      
+      # Clean previous builds (optional but recommended)
+      - name: Clean previous builds
+        run: |
+          cd federated_slm_app
+          flutter clean
 
       # Install iOS dependencies (CocoaPods)
       - name: Install iOS CocoaPods dependencies
@@ -41,17 +44,10 @@ jobs:
           cd ios
           pod install
 
-      # Clean previous builds (optional but recommended)
-      - name: Clean previous builds
-        run: |
-          cd federated_slm_app
-          flutter clean
-
       # Build iOS app without signing
       - name: Build iOS app without signing
         run: |
           cd federated_slm_app
-          cd ios
           flutter build ios --no-codesign  # Build without signing
 
       # Archive and create .ipa (unsigned)
