@@ -1,46 +1,51 @@
 import 'package:flutter/material.dart';
-import 'federated_model.dart';
+import 'package:ios_app/models/federated_model.dart'; // Import your model
 
 void main() {
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: ModelInferenceScreen(),
-    );
-  }
+  _MyAppState createState() => _MyAppState();
 }
 
-class ModelInferenceScreen extends StatefulWidget {
-  @override
-  _ModelInferenceScreenState createState() => _ModelInferenceScreenState();
-}
-
-class _ModelInferenceScreenState extends State<ModelInferenceScreen> {
-  FederatedModel model = FederatedModel();
+class _MyAppState extends State<MyApp> {
+  final FederatedModel model = FederatedModel();
+  String inferenceResult = "Press the button to run inference";
 
   @override
   void initState() {
     super.initState();
-    // Load the model as soon as the widget is created
     model.loadModel();
+  }
+
+  Future<void> _runInference() async {
+    List<int> sampleInput = [1, 2, 3, 4, 5]; // Example input
+    List<double> result = await model.runInference(sampleInput);
+
+    setState(() {
+      inferenceResult = "Inference Result: ${result.join(", ")}";
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: Text('Federated Model Inference')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () async {
-            List<int> inputData = [1, 2, 3, 4];  // Replace with real input data
-            var result = await model.runInference(inputData);
-            print(result);  // Output the result of the inference
-          },
-          child: Text('Run Inference'),
+    return MaterialApp(
+      home: Scaffold(
+        appBar: AppBar(title: Text("Federated SLM on iOS")),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(inferenceResult, textAlign: TextAlign.center),
+              SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _runInference,
+                child: Text("Run Inference"),
+              ),
+            ],
+          ),
         ),
       ),
     );

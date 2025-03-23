@@ -11,6 +11,7 @@ def upload_model():
     weights = np.array(request.json["weights"])
     model_weights.append(weights)
 
+    # Aggregate weights (for now, just average them)
     aggregated_weights = np.mean(model_weights, axis=0)
     print(f"Aggregated weights: {aggregated_weights}")
 

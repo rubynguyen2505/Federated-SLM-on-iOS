@@ -1,5 +1,7 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:http/http.dart' as http;
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 class FederatedModel {
   late Interpreter interpreter;
@@ -8,11 +10,17 @@ class FederatedModel {
     interpreter = await Interpreter.fromAsset('assets/model.tflite');
   }
 
-  Future<List<dynamic>> runInference(List<int> input) async {
-    var inputTensor = Tensor.fromList(input);
-    var output = List.generate(10, (index) => 0.0);
-    interpreter.run(inputTensor, output);
-    return output;
+  Future<List<double>> runInference(List<int> input) async {
+    // Convert input to Float32List for TensorFlow Lite
+    var inputTensor = Float32List.fromList(input.map((e) => e.toDouble()).toList());
+
+    // Create an output buffer based on the model’s output shape
+    var outputTensor = List.filled(10, 0.0).reshape([1, 10]);
+
+    // Run inference
+    interpreter.run(inputTensor.reshape([1, input.length]), outputTensor);
+
+    return List<double>.from(outputTensor[0]);
   }
 
   // Send the model weights to the server
@@ -37,8 +45,9 @@ class FederatedModel {
 
   // Extract weights from the model
   List<double> getWeightsFromInterpreter() {
-    // Placeholder function for extracting weights from the interpreter
-    // You'll need to extract the actual weights from the model here
-    return [0.1, 0.2, 0.3];  // Example weights, replace with real ones
+    var tensorShape = interpreter.getOutputTensor(0).shape;
+    var buffer = Float32List(tensorShape.reduce((a, b) => a * b)); // Flatten shape
+    interpreter.getOutputTensor(0).copyTo(buffer);
+    return buffer.toList();
   }
 }

@@ -19,14 +19,6 @@ workflows:
         script: |
           cd ios_app
           flutter build ios --release --no-codesign
-      - name: Archive iOS App
-        script: |
-          cd ios_app/ios
-          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath ios_app/build/ios/iphoneos/Runner.xcarchive archive
-      - name: Export .ipa from archive
-        script: |
-          cd ios_app/ios
-          xcodebuild -exportArchive -archivePath ios_app/build/ios/iphoneos/Runner.xcarchive -exportPath ios_app/build/ios/iphoneos -exportOptionsPlist ios_app/ios/ExportOptions.plist
       - name: List contents of the build directory
         script: |
           echo "Listing contents of ios_app/build/ios/iphoneos"
