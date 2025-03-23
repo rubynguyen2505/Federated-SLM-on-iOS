@@ -19,13 +19,8 @@ workflows:
         script: |
           cd ios_app
           flutter build ios --release --no-codesign  # --codesign if you use code signing
-          ls -la build/ios/iphoneos  # Add this to check if the app is being generated
-      - name: List contents of the build directory
-        script: |
-          echo "Listing contents of build/ios/iphoneos"
-          ls -R build/ios/iphoneos
       - name: Deploy to TestFlight
         script: |
-          xcrun altool --upload-app -f build/ios/iphoneos/Runner.app -t ios --username "$APPLE_ID" --password "$APPLE_PASSWORD"
+          xcrun altool --upload-app -f ios_app/build/ios/iphoneos/Runner.app -t ios --username "$APPLE_ID" --password "$APPLE_PASSWORD"
     artifacts:
       - build/ios/iphoneos/Runner.app
