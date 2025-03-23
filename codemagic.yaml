@@ -1,0 +1,23 @@
+workflows:
+  ios:
+    name: iOS Build
+    max_build_duration: 120
+    environment:
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Install dependencies
+        script: |
+          flutter pub get
+          pod install --repo-update
+      - name: Build iOS App
+        script: |
+          flutter build ios --release --no-codesign
+    artifacts:
+      - build/ios/iphoneos/Runner.app
+    publish:
+      scripts:
+        - name: Deploy to TestFlight
+          script: |
+            xcrun altool --upload-app -f build/ios/iphoneos/Runner.app -t ios --username "$APPLE_ID" --password "$APPLE_PASSWORD"
