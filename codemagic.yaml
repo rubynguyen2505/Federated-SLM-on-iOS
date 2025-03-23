@@ -3,6 +3,8 @@ workflows:
     name: iOS Build
     max_build_duration: 120
     environment:
+      groups:
+        - apple-authentication   # Reference the variable group here
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -17,6 +19,7 @@ workflows:
         script: |
           cd ios_app
           flutter build ios --release --no-codesign  # --codesign if you use code signing
+          ls -la build/ios/iphoneos  # Add this to check if the app is being generated
       - name: Deploy to TestFlight
         script: |
           xcrun altool --upload-app -f build/ios/iphoneos/Runner.app -t ios --username "$APPLE_ID" --password "$APPLE_PASSWORD"
