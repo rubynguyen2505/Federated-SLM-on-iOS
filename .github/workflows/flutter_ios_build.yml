@@ -1,0 +1,53 @@
+name: Build iOS App for iOS without signing
+
+on:
+  push:
+    branches:
+      - main  # Set your branch
+  pull_request:
+    branches:
+      - main  # Set your branch
+
+jobs:
+  build:
+    runs-on: macos-latest  # Use the macOS runner
+    
+    steps:
+      # Checkout code from the repository
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Set up Flutter
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.13.6'  # Use your Flutter version
+
+      # Install dependencies (flutter packages)
+      - name: Install dependencies
+        run: |
+          flutter pub get
+
+      # Clean previous builds (optional but recommended)
+      - name: Clean previous builds
+        run: |
+          flutter clean
+
+      # Build iOS app without signing
+      - name: Build iOS app without signing
+        run: |
+          flutter build ios --no-codesign  # Build without signing
+
+      # Archive and create .ipa (unsigned)
+      - name: Archive and create .ipa (unsigned)
+        run: |
+          cd ios
+          xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive
+          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportPath $PWD/build/Runner.ipa -exportOptionsPlist /dev/null
+
+      # Optional: Upload the .ipa file as an artifact (to download later)
+      - name: Upload .ipa as artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: runner-ipa
+          path: ios/build/Runner.ipa
