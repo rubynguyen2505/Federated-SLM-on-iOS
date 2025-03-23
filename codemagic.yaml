@@ -9,8 +9,9 @@ workflows:
     scripts:
       - name: Install dependencies
         script: |
+          cd ios_app
           flutter pub get
-          cd ios_app/ios
+          cd ios
           pod install --repo-update
       - name: Build iOS App
         script: |
