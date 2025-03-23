@@ -52,7 +52,7 @@ jobs:
 
       # Upload the .ipa file as an artifact (to download later)
       - name: Upload .ipa as artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: runner-ipa
           path: ios/build/Runner.ipa
