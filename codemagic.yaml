@@ -4,7 +4,7 @@ workflows:
     max_build_duration: 120
     environment:
       groups:
-        - apple-authentication   # Reference the variable group here
+        - apple-authentication
       flutter: stable
       xcode: latest
       cocoapods: default
@@ -18,10 +18,10 @@ workflows:
       - name: Build iOS App
         script: |
           cd ios_app
-          flutter build ios --release --no-codesign  # --codesign if you use code signing
+          flutter build ios --release --no-codesign
       - name: List contents of the build directory
         script: |
           echo "Listing contents of ios_app/build/ios/iphoneos"
           ls -R ios_app/build/ios/iphoneos
     artifacts:
-      - ios_app/build/ios/iphoneos/Runner.ipa  # This should reference the .ipa file, not .app
+      - ios_app/build/ios/iphoneos/Runner.ipa  # Reference the .ipa file
