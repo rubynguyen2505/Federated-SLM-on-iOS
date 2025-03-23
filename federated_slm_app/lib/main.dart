@@ -1,3 +1,6 @@
+import 'package:flutter/material.dart';
+import 'package:federated_slm_app/tflite_model.dart';
+
 class MyModelPage extends StatefulWidget {
   @override
   _MyModelPageState createState() => _MyModelPageState();
