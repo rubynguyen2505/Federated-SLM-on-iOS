@@ -4,28 +4,38 @@ import 'package:federated_slm_app/tflite_model.dart';
 import 'package:http/http.dart' as http;  // Import the HTTP package
 
 // Function to send model weights to the server
-Future<bool> sendModelWeights(List<double> weights) async {
+// Function to send model weights to the server
+Future<String> sendModelWeights(List<double> weights) async {
   var url = Uri.parse("http://172.24.201.114:5000/upload_model");
 
   try {
+    print("🔹 Sending model weights to server...");
+    print("🔹 Request URL: $url");
+    print("🔹 Request Body: ${jsonEncode({"weights": weights})}");
+
     var response = await http.post(
       url,
       headers: {"Content-Type": "application/json"},
       body: jsonEncode({"weights": weights}),
     );
 
+    print("🔹 Response Status Code: ${response.statusCode}");
+    print("🔹 Response Body: ${response.body}");
+
     if (response.statusCode == 200) {
       print("✅ Model update sent successfully");
-      return true;
+      return "✅ Model updated successfully! Server: ${response.body}";
     } else {
-      print("❌ Failed to send model update: ${response.statusCode}");
-      return false;
+      print("❌ Failed to send model update: ${response.statusCode} - ${response.body}");
+      return "❌ Server Error (${response.statusCode}): ${response.body}";
     }
   } catch (e) {
     print("❌ Error sending model update: $e");
-    return false;
+    return "❌ Network Error: $e";
   }
 }
+
+
 
 void main() {
   runApp(MyApp());
@@ -69,20 +79,24 @@ class _MyModelPageState extends State<MyModelPage> {
     if (_isLoading) return;  // Prevent multiple clicks
 
     setState(() {
-      _isLoading = true;  // Show loading indicator
-      _statusMessage = 'Running inference...';  // Show status message
+      _isLoading = true;
+      _statusMessage = 'Running inference...';
     });
 
     try {
       double input = 1.23;  // Example input, replace with actual input value
-      var result = await model.runModel(input);  // Run the model
+      var result = await model.runModel(input);
 
       if (result != null) {
-        List<double> weights = result.cast<double>();  // Assuming 'result' is a list of weights
-        bool success = await sendModelWeights(weights);  // Send weights to the server
+        setState(() {
+          _statusMessage = '✅ Inference successful! Sending model update...';
+        });
+
+        List<double> weights = result.cast<double>();  // Ensure it's a list of doubles
+        String serverMessage = await sendModelWeights(weights);  // Send weights and get response message
 
         setState(() {
-          _statusMessage = success ? '✅ Model updated successfully!' : '❌ Failed to update model';
+          _statusMessage = serverMessage;  // Show server response message
         });
       } else {
         setState(() {
@@ -95,10 +109,11 @@ class _MyModelPageState extends State<MyModelPage> {
       });
     } finally {
       setState(() {
-        _isLoading = false;  // Hide loading indicator
+        _isLoading = false;
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
