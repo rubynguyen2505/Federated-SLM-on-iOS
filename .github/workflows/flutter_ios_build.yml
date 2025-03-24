@@ -3,14 +3,14 @@ name: Build iOS App for iOS without signing
 on:
   push:
     branches:
-      - master  # Set your branch
+      - master
   pull_request:
     branches:
-      - master  # Set your branch
+      - master
 
 jobs:
   build:
-    runs-on: macos-latest  # Use the macOS runner
+    runs-on: macos-latest  # Use macOS runner
 
     steps:
       # Checkout code from the repository
@@ -21,7 +21,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.13.6'  # Use your Flutter version
+          flutter-version: '3.13.6'
 
       # Clean previous builds (optional but recommended)
       - name: Clean previous builds
@@ -46,19 +46,25 @@ jobs:
       - name: Build iOS app without signing
         run: |
           cd federated_slm_app
-          flutter build ios --no-codesign  # Build without signing
+          flutter build ios --no-codesign
 
-      # Archive and create .ipa (unsigned)
-      - name: Archive and create .ipa (unsigned)
+      # Archive the iOS app (no signing)
+      - name: Archive iOS app
         run: |
           cd federated_slm_app
           cd ios
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportPath $PWD/build/Runner.ipa -exportOptionsPlist exportOptions.plist
 
-      # Optional: Upload the .ipa file as an artifact (to download later)
-      - name: Upload .ipa as artifact
+      # Extract the .app from the .xcarchive
+      - name: Extract .app from .xcarchive
+        run: |
+          cd federated_slm_app/ios
+          mkdir -p $PWD/build/RunnerApp
+          cp -R $PWD/build/Runner.xcarchive/Products/Applications/Runner.app $PWD/build/RunnerApp/
+
+      # Upload the extracted .app as artifact
+      - name: Upload .app as artifact
         uses: actions/upload-artifact@v4
         with:
-          name: runner-ipa
-          path: ios/build/Runner.ipa
+          name: runner-app
+          path: ios/build/RunnerApp/Runner.app
