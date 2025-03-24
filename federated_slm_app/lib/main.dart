@@ -1,6 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:federated_slm_app/tflite_model.dart';
 
+void main() {
+  runApp(MyApp()); // This is the entry point of your Flutter application
+}
+
+class MyApp extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Federated SLM App',
+      theme: ThemeData(primarySwatch: Colors.blue),
+      home: MyModelPage(), // This is the home screen of the app
+    );
+  }
+}
+
 class MyModelPage extends StatefulWidget {
   @override
   _MyModelPageState createState() => _MyModelPageState();
