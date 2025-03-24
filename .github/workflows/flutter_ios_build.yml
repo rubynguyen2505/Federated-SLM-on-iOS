@@ -61,16 +61,9 @@ jobs:
           cd federated_slm_app/ios
           ls -R $PWD/build/Runner.xcarchive/Products/Applications/
 
-      # Extract the .app from the .xcarchive
-      - name: Extract .app from .xcarchive
-        run: |
-          cd federated_slm_app/ios
-          mkdir -p $PWD/build/RunnerApp
-          cp -R $PWD/build/Runner.xcarchive/Products/Applications/Runner.app $PWD/build/RunnerApp/
-
       # Upload the extracted .app as artifact
       - name: Upload .app as artifact
         uses: actions/upload-artifact@v4
         with:
           name: runner-app
-          path: ios/build/RunnerApp/Runner.app
+          path: federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app
