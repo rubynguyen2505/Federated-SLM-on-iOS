@@ -7,7 +7,7 @@ class TensorFlowLiteModel {
   Map<String, dynamic>? _tokenizer; // Tokenizer data
 
   // Load model and tokenizer
-  Future<bool> loadModel() async {
+  Future<String> loadModel() async {
     try {
       _interpreter = await Interpreter.fromAsset('assets/model.tflite');
       
@@ -17,14 +17,14 @@ class TensorFlowLiteModel {
       
       if (_interpreter == null) {
         print("❌ Model or Tokenizer not loaded!");
-        return false;
+        return "❌ Model or Tokenizer not loaded!";
       } else {
         print("✅ Model and Tokenizer loaded successfully!");
-        return true;
+        return "✅ Model and Tokenizer loaded successfully!";
       }
     } catch (e) {
       print("❌ Error loading model/tokenizer: $e");
-      return false;
+      return "❌ Error loading model/tokenizer: $e";
     }
   }
 

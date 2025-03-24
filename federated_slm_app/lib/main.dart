@@ -70,16 +70,10 @@ class _MyModelPageState extends State<MyModelPage> {
   }
 
   Future<void> _initializeModel() async {
-    bool modelLoaded = await model.loadModel();  // Await the asynchronous function
-    if (!modelLoaded) {
-      setState(() {
-        _statusMessage = '❌ Model failed to load. Check logs for details.';
-      });
-    } else {
-      setState(() {
-        _statusMessage = '✅ Model loaded successfully!';
-      });
-    }
+    Atring modelLoaded = await model.loadModel();  // Await the asynchronous function
+    setState(() {
+      _statusMessage = modelLoaded;  // Show the model loading status
+    });
   }
 
   @override
