@@ -24,6 +24,7 @@ class TensorFlowLiteModel {
       }
     } catch (e) {
       print("❌ Error loading model/tokenizer: $e");
+      return false;
     }
   }
 
