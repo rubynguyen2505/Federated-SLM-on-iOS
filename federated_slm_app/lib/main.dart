@@ -66,7 +66,11 @@ class _MyModelPageState extends State<MyModelPage> {
   @override
   void initState() {
     super.initState();
-    bool modelLoaded = model.loadModel();  // Load the model when the page is initialized
+    _initializeModel();
+  }
+
+  Future<void> _initializeModel() async {
+    bool modelLoaded = await model.loadModel();  // Await the asynchronous function
     if (!modelLoaded) {
       setState(() {
         _statusMessage = '❌ Model failed to load. Check logs for details.';
