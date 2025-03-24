@@ -38,10 +38,10 @@ class TensorFlowLiteModel {
     // Tokenizer word index
     Map<String, dynamic> wordIndex = _tokenizer!['config']['word_index'];
 
-    // Convert text to tokens
+    // Convert text to tokenized sequence (cast values to int explicitly)
     List<int> sequence = text
         .split(" ")
-        .map((word) => wordIndex[word] ?? 0) // Convert word to index, default 0
+        .map((word) => (wordIndex[word] ?? 0) as int) // 👈 Explicitly cast to int
         .toList();
 
     // Pad sequence to max length
