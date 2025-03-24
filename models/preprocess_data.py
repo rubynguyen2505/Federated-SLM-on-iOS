@@ -1,6 +1,7 @@
 import tensorflow as tf
 import tensorflow_datasets as tfds
 import numpy as np
+import json
 
 DATASET_NAME = "imdb_reviews"
 
@@ -28,9 +29,9 @@ if __name__ == "__main__":
     np.savez("preprocessed_data.npz", sequences=sequences, labels=labels)  # Save labels here
     
     # Save the tokenizer as a separate file
-    with open('tokenizer.pkl', 'wb') as f:
-        import pickle
-        pickle.dump(tokenizer, f)
+    tokenizer_json = tokenizer.to_json()
+    with open('tokenizer.json', 'w') as f:
+        json.dump(tokenizer_json, f)
 
     print(f"Dataset '{DATASET_NAME}' preprocessed and saved!")
 

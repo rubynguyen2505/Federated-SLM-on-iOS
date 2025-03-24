@@ -61,11 +61,21 @@ class _MyModelPageState extends State<MyModelPage> {
   TensorFlowLiteModel model = TensorFlowLiteModel();
   bool _isLoading = false;  // Track loading state
   String _statusMessage = '';  // To show the status message
+  TextEditingController _textController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    model.loadModel();  // Load the model when the page is initialized
+    bool modelLoaded = model.loadModel();  // Load the model when the page is initialized
+    if (!modelLoaded) {
+      setState(() {
+        _statusMessage = '❌ Model failed to load. Check logs for details.';
+      });
+    } else {
+      setState(() {
+        _statusMessage = '✅ Model loaded successfully!';
+      });
+    }
   }
 
   @override
@@ -84,8 +94,8 @@ class _MyModelPageState extends State<MyModelPage> {
     });
 
     try {
-      double input = 1.23;  // Example input, replace with actual input value
-      var result = await model.runModel(input);
+      String userInput = _textController.text;
+      var result = await model.runModel(userInput);
 
       if (result != null) {
         setState(() {
@@ -124,10 +134,14 @@ class _MyModelPageState extends State<MyModelPage> {
           padding: const EdgeInsets.all(16.0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              TextField(
+                controller: _textController,
+                decoration: InputDecoration(labelText: "Enter text"),
+              ),
+              SizedBox(height: 20),
               ElevatedButton(
-                onPressed: _isLoading ? null : makePrediction, // Disable button while loading
+                onPressed: _isLoading ? null : makePrediction,
                 child: _isLoading ? Text("Processing...") : Text("Run Inference"),
               ),
               SizedBox(height: 20),
