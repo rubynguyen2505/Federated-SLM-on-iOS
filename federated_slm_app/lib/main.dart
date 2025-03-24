@@ -73,9 +73,7 @@ class _MyModelPageState extends State<MyModelPage> {
       appBar: AppBar(title: Text("Federated Model Inference")),
       body: Center(
         child: ElevatedButton(
-          onPressed: () async {
-            await makePrediction();  // Await the async function here
-          },
+          onPressed: () => makePrediction(),
           child: Text("Run Inference"),
         ),
       ),
