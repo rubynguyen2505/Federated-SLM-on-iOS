@@ -30,7 +30,6 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  tflite: ^1.1.2  # TensorFlow Lite Flutter plugin
   tflite_flutter: ^0.10.4  # TensorFlow Lite Flutter plugin
 
 

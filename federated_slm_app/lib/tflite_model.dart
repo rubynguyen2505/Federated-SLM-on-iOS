@@ -1,35 +1,30 @@
-import 'package:tflite/tflite.dart';
-import 'dart:typed_data';  // Import for Uint8List
+import 'package:tflite_flutter/tflite_flutter.dart';
 
 class TensorFlowLiteModel {
+  Interpreter? _interpreter;
+
   // Initialize the model
   Future<void> loadModel() async {
-    String? res = await Tflite.loadModel(
-      model: 'assets/model.tflite',
-      labels: 'assets/labels.txt', // Optionally, provide labels if available
-    );
-
-    if (res == null) {
-      print("❌ Model failed to load!");
-    } else {
-      print("✅ Model loaded successfully: $res");
+    try {
+      // Load the model using tflite_flutter's Interpreter
+      _interpreter = await Interpreter.fromAsset('assets/model.tflite');
+      print("✅ Model loaded successfully");
+    } catch (e) {
+      print("❌ Model failed to load: $e");
     }
   }
 
   // Run inference on an input tensor (expecting a single float value)
   Future<List<dynamic>?> runModel(double input) async {
     try {
-      // Convert the input to binary format
-      // Ensure you create a Uint8List from the input (typically needed for binary data)
-      Uint8List inputData = Uint8List(1)..buffer.asByteData().setFloat32(0, input, Endian.little); // Convert float to binary
+      // Prepare input data as a List<List<double>> for a 2D input tensor
+      List<List<double>> inputData = [[input]];
 
-      // Run inference with the binary input
-      var output = await Tflite.runModelOnBinary(
-        binary: inputData, // Use Uint8List as input
-        numResults: 2,  
-        threshold: 0.05,  
-        asynch: true,  
-      );
+      // Create an output buffer to hold the result
+      var output = List.filled(2, 0.0);  // Change this based on your model's expected output size
+
+      // Run inference on the input data
+      _interpreter?.run(inputData, output);
 
       print("✅ Inference output: $output");
       return output;
@@ -41,6 +36,6 @@ class TensorFlowLiteModel {
 
   // Close the model when done
   void close() {
-    Tflite.close();
+    _interpreter?.close();
   }
 }
