@@ -22,9 +22,9 @@ class _MyModelPageState extends State<MyModelPage> {
   }
 
   void makePrediction() async {
-    // Example input, adjust based on your model
-    var input = [/* input data */];
-    var result = await model.runModel(input);
+    // Example input - this should be a single double value based on your model's input
+    double input = 1.23;  // Replace with actual input value
+    var result = await model.runModel(input);  // Pass the double directly to the runModel function
     print(result);
   }
 
