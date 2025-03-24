@@ -15,7 +15,7 @@ class TensorFlowLiteModel {
       String jsonString = await rootBundle.loadString('assets/tokenizer.json');
       _tokenizer = jsonDecode(jsonString);
       
-      if (_interpreter == null || _tokenizer == null) {
+      if (_interpreter == null) {
         print("❌ Model or Tokenizer not loaded!");
         return false;
       } else {
