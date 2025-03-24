@@ -55,6 +55,12 @@ jobs:
           cd ios
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
+      # List contents of the .xcarchive to confirm .app exists
+      - name: List contents of .xcarchive
+        run: |
+          cd federated_slm_app/ios
+          ls -R $PWD/build/Runner.xcarchive/Products/Applications/
+
       # Extract the .app from the .xcarchive
       - name: Extract .app from .xcarchive
         run: |
