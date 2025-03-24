@@ -54,7 +54,7 @@ jobs:
           cd federated_slm_app
           cd ios
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportPath $PWD/build/Runner.ipa -exportOptionsPlist ios/exportOptions.plist
+          xcodebuild -exportArchive -archivePath $PWD/build/Runner.xcarchive -exportPath $PWD/build/Runner.ipa -exportOptionsPlist exportOptions.plist
 
       # Optional: Upload the .ipa file as an artifact (to download later)
       - name: Upload .ipa as artifact
