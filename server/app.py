@@ -5,17 +5,20 @@ app = Flask(__name__)
 
 model_weights = []
 
-@app.route("/upload_model", methods=["POST"])
+@app.route("/upload_model", methods=["GET", "POST"])
 def upload_model():
-    global model_weights
-    weights = np.array(request.json["weights"])
-    model_weights.append(weights)
+    if request.method == "GET":
+        return {"status": "GET request received!"}
+    elif request.method == "POST": 
+        global model_weights
+        weights = np.array(request.json["weights"])
+        model_weights.append(weights)
 
-    # Aggregate weights (for now, just average them)
-    aggregated_weights = np.mean(model_weights, axis=0)
-    print(f"Aggregated weights: {aggregated_weights}")
+        # Aggregate weights (for now, just average them)
+        aggregated_weights = np.mean(model_weights, axis=0)
+        print(f"Aggregated weights: {aggregated_weights}")
 
-    return {"status": "Model update received!"}
+        return {"status": "Model update received!"}
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000)

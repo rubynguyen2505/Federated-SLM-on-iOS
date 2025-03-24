@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;  // Import the HTTP package
 // Function to send model weights to the server
 // Function to send model weights to the server
 Future<String> sendModelWeights(List<double> weights) async {
-  var url = Uri.parse("http://172.24.201.114:5000/upload_model");
+  var url = Uri.parse("http://192.168.12.118:5000/upload_model"); // Use Windows Wi-Fi IP
 
   try {
     print("🔹 Sending model weights to server...");
