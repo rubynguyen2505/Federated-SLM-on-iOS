@@ -2,12 +2,12 @@
 platform :ios, '12.0'
 
 # Ensure Flutter environment is loaded before using Flutter-specific pod installation
-flutter_root = File.expand_path('..', File.dirname(__FILE__))
-load File.join(flutter_root, 'flutter', 'tools', 'podhelper.rb')
+flutter_root = File.expand_path('..', File.expand_path('..', __FILE__))
+load File.join(flutter_root, 'federated_slm_app', 'ios', 'Flutter', 'podhelper.rb')
 
 target 'Runner' do
   # Enable dynamic frameworks to properly link TensorFlow Lite
-  use_frameworks!
+  use_frameworks! :linkage => :dynamic
 
   # Pods for Runner
   pod 'TensorFlowLiteSwift', '~> 2.12.0'
