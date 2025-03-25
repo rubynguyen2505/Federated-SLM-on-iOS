@@ -96,14 +96,15 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
               title: Text('Aggregated Model Weights'),
               children: [
                 Container(
-                  height: 200, // **Fixed height to prevent full-screen takeover**
+                  height: MediaQuery.of(context).size.height * 0.2,
+                  width: MediaQuery.of(context).size.width * 0.8,
                   padding: EdgeInsets.all(8.0),
                   child: Scrollbar(
                     thumbVisibility: true, // Adds a scrollbar for better scrolling
                     child: SingleChildScrollView(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
-                          maxHeight: 200, // Ensures it never exceeds this height
+                          maxHeight: MediaQuery.of(context).size.height * 0.2,
                         ),
                         child: SelectableText(
                           _aggregatedWeights.isEmpty
