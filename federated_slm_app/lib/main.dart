@@ -47,7 +47,7 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
     _model.simulateLocalUpdate();
 
     // Send model weights to the server for aggregation
-    String sendResponse = await _model.sendWeightsToServer(_model._modelWeights!);
+    String sendResponse = await _model.sendWeightsToServer(_model.modelWeights!);
 
     // Receive aggregated model from the server
     String receiveResponse = await _model.receiveAggregatedModel();

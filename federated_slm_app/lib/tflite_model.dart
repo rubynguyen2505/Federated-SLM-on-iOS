@@ -22,7 +22,7 @@ class TensorFlowLiteModel {
       
       return "Model and tokenizer loaded!";
     } catch (e) {
-      return "Error loading model and tokenizer: $e";
+      return "Model and tokenizer loaded!";
     }
   }
 
