@@ -94,14 +94,19 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SizedBox(
-                    height: 200, // Set a fixed height to constrain overflow
-                    child: SingleChildScrollView(
-                      child: Text(
-                        _aggregatedWeights.isEmpty
-                            ? 'No aggregated weights yet.'
-                            : _aggregatedWeights,
-                        style: TextStyle(fontSize: 14),
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints(
+                      maxHeight: 200, // Limits max height to prevent screen takeover
+                    ),
+                    child: LimitedBox(
+                      maxHeight: 200, // Ensures expansion doesn't exceed this height
+                      child: SingleChildScrollView(
+                        child: SelectableText( // Allows users to scroll & copy
+                          _aggregatedWeights.isEmpty
+                              ? 'No aggregated weights yet.'
+                              : _aggregatedWeights,
+                          style: TextStyle(fontSize: 12),
+                        ),
                       ),
                     ),
                   ),
