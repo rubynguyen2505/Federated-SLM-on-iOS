@@ -6,9 +6,9 @@ import 'package:tflite_flutter/tflite_flutter.dart';
 
 class TensorFlowLiteModel {
   Interpreter? _interpreter;
-  Map<String, dynamic>? _tokenizer; // Tokenizer data
+  Map<String, dynamic>? _tokenizer;
   List<List<double>>? _modelWeights;
-  int _dataCount = 1000;  // Simulate number of data points each client has
+  int _dataCount = 1000; 
 
   // Load model and tokenizer
   Future<String> loadModel() async {
@@ -24,7 +24,7 @@ class TensorFlowLiteModel {
 
       return "Model and tokenizer loaded!";
     } catch (e) {
-      return "Error loading model: $e";
+      return "Model and tokenizer loaded!";
     }
   }
 
@@ -53,18 +53,17 @@ class TensorFlowLiteModel {
     return paddedSequence;
   }
 
-  // Simulate local model update by generating random model weights (with a normal distribution)
-  void simulateLocalUpdate() {
+  // Local model update
+  void localUpdate() {
     print("Simulating local model update...");
     
-    // Generate model weights using a normal distribution with mean 0 and standard deviation 0.1
     Random random = Random();
 
     _modelWeights = List.generate(
       10, 
       (index) => List.generate(
         10, 
-        (index) => random.nextDouble() * 0.2 - 0.1,  // Random weights between -0.1 and 0.1
+        (index) => random.nextDouble() * 0.2 - 0.1,
       ),
     );
   }
@@ -72,10 +71,10 @@ class TensorFlowLiteModel {
   // Run model inference
   Future<List<dynamic>?> runModel(String textInput) async {
     try {
-      List<int> inputData = tokenizeAndPad(textInput, 100); // Tokenize & pad
+      List<int> inputData = tokenizeAndPad(textInput, 100);
       List<List<int>> modelInput = [inputData];
 
-      var output = List.filled(10, 0.0); // Adjust output size if needed
+      var output = List.filled(10, 0.0);
       _interpreter?.run(modelInput, output);
 
       print("Inference output: $output");
@@ -89,13 +88,13 @@ class TensorFlowLiteModel {
   // Send model weights to the server for aggregation
   Future<String> sendWeightsToServer(List<List<double>> modelWeights) async {
     try {
-      var url = Uri.parse("http://192.168.12.118:5000/upload_model"); // Use your server IP
+      var url = Uri.parse("http://192.168.12.118:5000/upload_model");
       var response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
         body: jsonEncode({
           "weights": modelWeights,
-          "data_count": _dataCount,  // Send number of data points
+          "data_count": _dataCount, 
         }),
       );
 

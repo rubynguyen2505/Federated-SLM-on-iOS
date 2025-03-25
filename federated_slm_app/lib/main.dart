@@ -26,6 +26,7 @@ class FederatedLearningDemo extends StatefulWidget {
 class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
   final TensorFlowLiteModel _model = TensorFlowLiteModel();
   String _status = "Loading...";
+  String _aggregatedWeights = "";
 
   @override
   void initState() {
@@ -41,26 +42,22 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
     });
   }
 
-  // Simulate federated learning process with multiple rounds
-  void simulateFederatedLearning() async {
-    // Simulate several rounds of federated learning
+  void federatedLearning() async {
     for (int round = 1; round <= 5; round++) {
       print("Round $round: Starting federated learning update...");
 
-      // Simulate local model update
-      _model.simulateLocalUpdate();
+      _model.localUpdate();
 
-      // Send model weights to the server for aggregation
       String sendResponse = await _model.sendWeightsToServer(_model.modelWeights!);
 
-      // Receive aggregated model from the server
       String receiveResponse = await _model.receiveAggregatedModel();
 
       setState(() {
         _status = "Round $round: $sendResponse, $receiveResponse";
+        _aggregatedWeights = receiveResponse;
       });
 
-      await Future.delayed(Duration(seconds: 2));  // Simulate waiting time for the next round
+      await Future.delayed(Duration(seconds: 2));
     }
   }
 
@@ -80,11 +77,33 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Text(_status),
+            // Display current status
+            Text(
+              _status,
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
             SizedBox(height: 20),
             ElevatedButton(
-              onPressed: simulateFederatedLearning,
+              onPressed: federatedLearning,
               child: Text('Start Federated Learning Simulation'),
+            ),
+            SizedBox(height: 20),
+            // Show aggregated weights in a collapsible section
+            ExpansionTile(
+              title: Text('Aggregated Model Weights'),
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      _aggregatedWeights.isEmpty
+                          ? 'No aggregated weights yet.'
+                          : _aggregatedWeights,
+                      style: TextStyle(fontSize: 14),
+                    ),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
