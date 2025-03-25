@@ -16,7 +16,7 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 1. [Project Structure](#project-structure)
 2. [Prerequisites](#prerequisites)
 3. [Install Virtual Environment](#install-virtual-environment)
-4. [Install Tensorflow Lite Model](#install-tensorflow-lite-model)
+4. [Training and Converting the TensorFlow Lite Model](#training-and-converting-the-tensorflow-lite-model)
 5. [Setting Up the Flutter App](#setting-up-the-flutter-app)
 6. [Setting Up GitHub Actions](#setting-up-github-actions)
 7. [Converting Runner.app to Runner.ipa](#converting-runner-app-to-runner-ipa)
@@ -83,18 +83,21 @@ It is recommended to set up a virtual environment for Python dependencies to avo
 
    ```bash
    python3 -m venv tff_new_env
+   ```
 
 4. **Activate the virtual environment:**
 
    ```bash
-   source tff_new_env/bin/activat
+   source tff_new_env/bin/activate
+   ```
 
 5. **Install required Python dependencies:**
 
    ```bash
    pip install -r requirements.txt
+   ```
 
-## Install TensorFlow Lite Model
+## Training and Converting the TensorFlow Lite Model
 
 In the `models/` directory, you need to generate the TensorFlow Lite model (`model.tflite`) and tokenizer data (`tokenizer.json`). Follow these steps:
 
