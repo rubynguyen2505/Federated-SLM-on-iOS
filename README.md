@@ -18,8 +18,8 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 3. [Install Virtual Environment](#install-virtual-environment)
 4. [Training and Converting the TensorFlow Lite Model](#training-and-converting-the-tensorflow-lite-model)
 5. [Setting Up the Flutter App](#setting-up-the-flutter-app)
-6. [Setting Up GitHub Actions](#setting-up-github-actions)
-7. [Converting Runner.app to Runner.ipa](#converting-runner-app-to-runner-ipa)
+6. [Setting Up GitHub Actions for CI/CD](#setting-up-github-actions-for-cicd)
+7. [Converting Runner.app to Runner.ipa](#converting-runnerapp-to-runneripa)
 8. [Running the Flask Server](#running-the-flask-server)
 9. [Running Federated Learning](#running-federated-learning)
 
@@ -333,7 +333,7 @@ These scripts will preprocess data, load federated data, and train a federated m
    var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");
    ```
 
-## Setting Up GitHub Actions
+## Setting Up GitHub Actions for CI/CD
 
 1. **Navigate back to the project directory.**
 
@@ -341,6 +341,7 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    ```bash
    cd .github/workflows
+   ```
 
 3. **Configure** `flutter_ios_build.yml`:
 
@@ -416,6 +417,7 @@ These scripts will preprocess data, load federated data, and train a federated m
            with:
              name: runner-app
              path: federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app
+   ```
 
 4. **Push to GitHub:**
 
@@ -437,6 +439,7 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    ```bash
    apptoipa Runner.app
+   ```
 
 4. **Sideload the IPA:**
 
@@ -451,11 +454,13 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    ```bash
    cd server
+   ```
 
 2. **Run the Flask server:**
 
    ```bash
    python3 app.py
+   ```
 
    The server will be hosted locally at http://127.0.0.1:5000/.
 
