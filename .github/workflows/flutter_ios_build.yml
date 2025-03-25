@@ -29,6 +29,13 @@ jobs:
           cd federated_slm_app
           flutter clean
 
+      # Modify Podfile for dynamic linking
+      - name: Modify Podfile for dynamic linking
+        run: |
+          cd federated_slm_app/ios
+          sed -i '' 's/use_frameworks!/use_frameworks! :linkage => :dynamic/' Podfile
+          pod install --repo-update
+
       # Install dependencies (flutter packages)
       - name: Install Flutter dependencies
         run: |
@@ -55,11 +62,17 @@ jobs:
           cd ios
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
-      # List contents of the .xcarchive to confirm .app exists
-      - name: List contents of .xcarchive
+      # Copy TensorFlow Lite Frameworks
+      - name: Copy TensorFlow Lite Frameworks
         run: |
-          cd federated_slm_app/ios
-          ls -R $PWD/build/Runner.xcarchive/Products/Applications/
+          mkdir -p federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app/Frameworks/
+          cp -R federated_slm_app/ios/Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.framework federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app/Frameworks/
+          cp -R federated_slm_app/ios/Pods/TensorFlowLiteSwift/Frameworks/TensorFlowLiteSwift.framework federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app/Frameworks/
+
+      # Verify TensorFlow Lite Frameworks
+      - name: Verify TensorFlow Lite Frameworks
+        run: |
+          ls -R federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app/Frameworks/
 
       # Upload the extracted .app as artifact
       - name: Upload .app as artifact
