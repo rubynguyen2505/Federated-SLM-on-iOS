@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'tflite_model.dart';
+import 'dart:math';
 
 void main() {
   runApp(MyApp());
@@ -43,7 +44,7 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
   }
 
   void federatedLearning() async {
-    for (int round = 1; round <= 5; round++) {
+    for (int round = 1; round <= 100; round++) {
       print("Round $round: Starting federated learning update...");
 
       _model.localUpdate();
@@ -57,7 +58,9 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
         _aggregatedWeights = receiveResponse;
       });
 
-      await Future.delayed(Duration(seconds: 2));
+      Random random = Random();
+
+      await Future.delayed(Duration(seconds: random.nextInt(8) + 1));
     }
   }
 
@@ -92,16 +95,17 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
             ExpansionTile(
               title: Text('Aggregated Model Weights'),
               children: [
-                Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: ConstrainedBox(
-                    constraints: BoxConstraints(
-                      maxHeight: 200, // Limits max height to prevent screen takeover
-                    ),
-                    child: LimitedBox(
-                      maxHeight: 200, // Ensures expansion doesn't exceed this height
-                      child: SingleChildScrollView(
-                        child: SelectableText( // Allows users to scroll & copy
+                Container(
+                  height: 200, // **Fixed height to prevent full-screen takeover**
+                  padding: EdgeInsets.all(8.0),
+                  child: Scrollbar(
+                    thumbVisibility: true, // Adds a scrollbar for better scrolling
+                    child: SingleChildScrollView(
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(
+                          maxHeight: 200, // Ensures it never exceeds this height
+                        ),
+                        child: SelectableText(
                           _aggregatedWeights.isEmpty
                               ? 'No aggregated weights yet.'
                               : _aggregatedWeights,
