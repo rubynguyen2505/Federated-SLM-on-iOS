@@ -7,7 +7,7 @@ load File.join(flutter_root, 'federated_slm_app', 'ios', 'Flutter', 'podhelper.r
 
 target 'Runner' do
   # Enable dynamic frameworks to properly link TensorFlow Lite
-  use_frameworks! :linkage => :dynamic
+  use_frameworks!
 
   # Pods for Runner
   pod 'TensorFlowLiteSwift', '~> 2.12.0'
