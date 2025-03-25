@@ -11,8 +11,23 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 
 ---
 
-## **📂 Project Structure**
-Federated-SLM-on-iOS/ 
+## Table of Contents
+
+1. [Project Structure](#project-structure)
+2. [Prerequisites](#prerequisites)
+3. [Install Virtual Environment](#install-virtual-environment)
+4. [Install Tensorflow Lite Model](#install-tensorflow-lite-model)
+5. [Setting Up the Flutter App](#setting-up-the-flutter-app)
+6. [Setting Up GitHub Actions](#setting-up-github-actions)
+7. [Converting Runner.app to Runner.ipa](#converting-runner-app-to-runner-ipa)
+8. [Running the Flask Server](#running-the-flask-server)
+9. [Running Federated Learning](#running-federated-learning)
+
+---
+
+## Project Structure
+
+```
 ├── .github/ 
 │ ├── workflows/ 
 │ │ ├── flutter_ios_build.yml
@@ -35,14 +50,14 @@ Federated-SLM-on-iOS/
 │ ├── load_federated_data.py # Converts preprocessed data into TFF format 
 │ ├── train_federated_model.py # Federated learning training script 
 │ ├── model.tflite # Trained TFLite model for iOS 
-
+```
 
 
 ---
 
 ## Prerequisites
 
-### 1. Have WSL Ubuntu environment
+### 1. Install WSL Ubuntu
 
 You can download Ubuntu from the Microsoft Store. Once WSL Ubuntu is set up. Clone this repository to a new project directory on your WSL Ubuntu environment. 
 
@@ -56,7 +71,7 @@ Ensure that you have Python 3.x installed on WSL Ubuntu. You can download and in
 
 - Make sure that Python is added to your system's PATH during installation.
 
-### 4. Install Virtual Environment
+## Install Virtual Environment
 
 It is recommended to set up a virtual environment for Python dependencies to avoid conflicts with global Python packages. Follow the steps below to set it up:
 
@@ -79,7 +94,7 @@ It is recommended to set up a virtual environment for Python dependencies to avo
    ```bash
    pip install -r requirements.txt
 
-### 4. Install TensorFlow Lite Model
+## Install TensorFlow Lite Model
 
 In the `models/` directory, you need to generate the TensorFlow Lite model (`model.tflite`) and tokenizer data (`tokenizer.json`). Follow these steps:
 
@@ -97,7 +112,7 @@ In the `models/` directory, you need to generate the TensorFlow Lite model (`mod
 
 These scripts will preprocess data, load federated data, and train a federated model, resulting in the `model.tflite` and `tokenizer.json` files.
 
-### 5. Setting Up the Flutter App
+## Setting Up the Flutter App
 
 1. **Navigate to the Flutter app directory:**
 
@@ -207,8 +222,6 @@ These scripts will preprocess data, load federated data, and train a federated m
      # For details regarding fonts from package dependencies,
      # see https://flutter.dev/custom-fonts/#from-packages
 
-
-
 4. **Configure** `Podfile` in `ios/` **folder**:
 
    Ensure you have the following configurations in `Podfile`:
@@ -241,7 +254,7 @@ These scripts will preprocess data, load federated data, and train a federated m
 5. **Configure** `exportOptions.plist` in `ios/` **folder**:
 
    Ensure you have the following configurations in `exportOptions.plist`:
-   ```plist
+   ```bash
    <?xml version="1.0" encoding="UTF-8"?>
    <plist version="1.0">
      <dict>
@@ -300,10 +313,10 @@ These scripts will preprocess data, load federated data, and train a federated m
 
 12. Now back to the **Flutter App directory**, **Navigate** to `lib/main.dart` and **modify the following by replace** `192.168.12.118` with your **Windows local IP**:
 
-   ```dart
+   ```bash
    var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");
 
-### 6. Setting Up GitHub Actions for CI/CD
+## Setting Up GitHub Actions
 
 1. **Navigate back to the project directory.**
 
@@ -395,7 +408,7 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    After the build completes, download the artifact (`runner-app.zip`) from GitHub Actions and extract it to an empty folder on your Windows machine. Name that folder as `Runner.app`.
 
-### 7. Converting Runner.app to Runner.ipa
+## Converting Runner.app to Runner.ipa
 
 1. **Download** `apptoipa.exe` from the following link:
 
@@ -415,7 +428,7 @@ These scripts will preprocess data, load federated data, and train a federated m
    Make sure your iPhone is running iOS 17.5 or later and Developer Mode is enabled by:
    `Settings -> Privacy & Security -> Devloper Mode -> On`
 
-### 8. Running the Flask Server
+## Running the Flask Server
 
 1. Going back to your project directory, **navigate to the** `server/` folder:
 
@@ -429,7 +442,7 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    The server will be hosted locally at http://127.0.0.1:5000/.
 
-### 9. Running Federated Learning
+## Running Federated Learning
 
 1. **Open the Flutter app** on your iPhone (using Sideloadly).
 
