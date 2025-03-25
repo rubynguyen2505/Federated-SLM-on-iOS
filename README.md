@@ -105,6 +105,7 @@ In the `models/` directory, you need to generate the TensorFlow Lite model (`mod
 
    ```bash
    cd models
+   ```
 
 2. **Generate the model and tokenizer files** by running the following Python scripts in sequence:
 
@@ -112,6 +113,7 @@ In the `models/` directory, you need to generate the TensorFlow Lite model (`mod
    python3 preprocess_data.py
    python3 load_federated_data.py
    python3 train_federated_model.py
+   ```
 
 These scripts will preprocess data, load federated data, and train a federated model, resulting in the `model.tflite` and `tokenizer.json` files.
 
@@ -121,6 +123,7 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    ```bash
    cd federated_slm_app
+   ```
 
 2. **Add** `model.tflite` **and** `tokenizer.json` to the `assets/` folder of the Flutter app if they are not there already.
 
@@ -224,6 +227,7 @@ These scripts will preprocess data, load federated data, and train a federated m
      #
      # For details regarding fonts from package dependencies,
      # see https://flutter.dev/custom-fonts/#from-packages
+   ```
 
 4. **Configure** `Podfile` in `ios/` **folder**:
 
@@ -253,10 +257,12 @@ These scripts will preprocess data, load federated data, and train a federated m
        # Pods for testing
      end
    end
+   ```
 
 5. **Configure** `exportOptions.plist` in `ios/` **folder**:
 
    Ensure you have the following configurations in `exportOptions.plist`:
+
    ```bash
    <?xml version="1.0" encoding="UTF-8"?>
    <plist version="1.0">
@@ -279,6 +285,7 @@ These scripts will preprocess data, load federated data, and train a federated m
        <string>export</string>
      </dict>
    </plist>
+   ```
 
 6. Get **WSL's primary IP**:
 
@@ -286,16 +293,19 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    ```bash
    hostname -I
+   ```
 
 7. Now, on **Windows (not WSL)**, run this in **Powershell**:
 
    ```powershell
    ipconfig
+   ```
    
 8. Look for the **Wireless LAN adapter Wi-Fi** or **Ethernet** section. You’ll see something like:
 
    ```nginx
    IPv4 Address: 192.168.12.118
+   ```
 
 9. **Forward Windows Port 5000 to WSL**
 
@@ -303,21 +313,25 @@ These scripts will preprocess data, load federated data, and train a federated m
 
    ```powershell
    netsh interface portproxy add v4tov4 listenaddress=YOUR_WIFI_IP listenport=5000 connectaddress=YOUR_WSL_IP connectport=5000
+   ```
 
 10. **Verify**:
 
    ```powershell
    netsh interface portproxy show all
+   ```
 
 11. **Allow Firewall Access on Windows**:
 
    ```powershell
    New-NetFirewallRule -DisplayName "Allow Flask 5000" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+   ```
 
 12. Now back to the **Flutter App directory**, **Navigate** to `lib/main.dart` and **modify the following by replace** `192.168.12.118` with your **Windows local IP**:
 
    ```bash
    var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");
+   ```
 
 ## Setting Up GitHub Actions
 
