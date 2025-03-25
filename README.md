@@ -327,7 +327,7 @@ These scripts will preprocess data, load federated data, and train a federated m
    New-NetFirewallRule -DisplayName "Allow Flask 5000" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
    ```
 
-12. Now back to the **Flutter App directory**, **Navigate** to `lib/main.dart` and **modify the following by replace** `192.168.12.118` with your **Windows local IP**:
+12. Now back to the **Flutter App directory**, **Navigate** to `lib/tflite_model.dart` and **modify the following by replace** `192.168.12.118` with your **Windows local IP**:
 
    ```bash
    var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");

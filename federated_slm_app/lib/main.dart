@@ -94,12 +94,15 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(8.0),
-                  child: SingleChildScrollView(
-                    child: Text(
-                      _aggregatedWeights.isEmpty
-                          ? 'No aggregated weights yet.'
-                          : _aggregatedWeights,
-                      style: TextStyle(fontSize: 14),
+                  child: SizedBox(
+                    height: 200, // Set a fixed height to constrain overflow
+                    child: SingleChildScrollView(
+                      child: Text(
+                        _aggregatedWeights.isEmpty
+                            ? 'No aggregated weights yet.'
+                            : _aggregatedWeights,
+                        style: TextStyle(fontSize: 14),
+                      ),
                     ),
                   ),
                 ),
