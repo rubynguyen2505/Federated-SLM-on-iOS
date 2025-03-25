@@ -70,7 +70,7 @@ class _MyModelPageState extends State<MyModelPage> {
   }
 
   Future<void> _initializeModel() async {
-    Atring modelLoaded = await model.loadModel();  // Await the asynchronous function
+    String modelLoaded = await model.loadModel();  // Await the asynchronous function
     setState(() {
       _statusMessage = modelLoaded;  // Show the model loading status
     });
