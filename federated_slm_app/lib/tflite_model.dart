@@ -22,7 +22,7 @@ class TensorFlowLiteModel {
       
       return "Model and tokenizer loaded!";
     } catch (e) {
-      return "Model and tokenizer loaded!";
+      return "Error loading model and tokenizer: $e";
     }
   }
 
@@ -120,6 +120,9 @@ class TensorFlowLiteModel {
       return "Error receiving aggregated model.";
     }
   }
+
+  // Getter for _modelWeights
+  List<List<double>>? get modelWeights => _modelWeights;
 
   void close() {
     _interpreter?.close();
