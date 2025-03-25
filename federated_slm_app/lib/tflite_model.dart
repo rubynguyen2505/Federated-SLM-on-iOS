@@ -1,10 +1,12 @@
 import 'dart:convert';
 import 'package:flutter/services.dart';
+import 'package:http/http.dart' as http;
 import 'package:tflite_flutter/tflite_flutter.dart';
 
 class TensorFlowLiteModel {
   Interpreter? _interpreter;
   Map<String, dynamic>? _tokenizer; // Tokenizer data
+  List<List<double>>? _modelWeights;
 
   // Load model and tokenizer
   Future<String> loadModel() async {
@@ -15,33 +17,29 @@ class TensorFlowLiteModel {
       String jsonString = await rootBundle.loadString('assets/tokenizer.json');
       _tokenizer = jsonDecode(jsonString);
       
-      if (_interpreter == null) {
-        print("❌ Model or Tokenizer not loaded!");
-        return "❌ Model or Tokenizer not loaded!";
-      } else {
-        print("✅ Model and Tokenizer loaded successfully!");
-        return "✅ Model and Tokenizer loaded successfully!";
-      }
+      // Initialize empty weights
+      _modelWeights = [];
+      
+      return "Model and tokenizer loaded!";
     } catch (e) {
-      print("❌ Error loading model/tokenizer: $e");
-      return "❌ Error loading model/tokenizer: $e";
+      return "Model and tokenizer loaded!";
     }
   }
 
   // Tokenize and pad input text
   List<int> tokenizeAndPad(String text, int maxLen) {
     if (_tokenizer == null) {
-      print("❌ Tokenizer not loaded!");
+      print("Tokenizer not loaded!");
       return [];
     }
 
     // Tokenizer word index
     Map<String, dynamic> wordIndex = _tokenizer!['config']['word_index'];
 
-    // Convert text to tokenized sequence (cast values to int explicitly)
+    // Convert text to tokenized sequence
     List<int> sequence = text
         .split(" ")
-        .map((word) => (wordIndex[word] ?? 0) as int) // 👈 Explicitly cast to int
+        .map((word) => (wordIndex[word] ?? 0) as int)
         .toList();
 
     // Pad sequence to max length
@@ -53,22 +51,73 @@ class TensorFlowLiteModel {
     return paddedSequence;
   }
 
+  // Simulate local model update by generating random model weights (for now)
+  void simulateLocalUpdate() {
+    print("Simulating local model update...");
+    
+    // Generating some random weights for the model (as an example)
+    _modelWeights = List.generate(
+        10, (index) => List.generate(10, (index) => (index + 1).toDouble())
+    );
+  }
+
   // Run model inference
   Future<List<dynamic>?> runModel(String textInput) async {
     try {
       List<int> inputData = tokenizeAndPad(textInput, 100); // Tokenize & pad
-      
-      // Model expects a batch of inputs
       List<List<int>> modelInput = [inputData];
 
       var output = List.filled(10, 0.0); // Adjust output size if needed
       _interpreter?.run(modelInput, output);
 
-      print("✅ Inference output: $output");
+      print("Inference output: $output");
       return output;
     } catch (e) {
-      print("❌ Error during inference: $e");
+      print("Error during inference: $e");
       return null;
+    }
+  }
+
+  // Send model weights to the server for aggregation
+  Future<String> sendWeightsToServer(List<List<double>> modelWeights) async {
+    try {
+      var url = Uri.parse("http://192.168.12.118:5000/upload_model"); // Use your server IP
+      var response = await http.post(
+        url,
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({"weights": modelWeights}),
+      );
+
+      if (response.statusCode == 200) {
+        print("Weights sent successfully! Response: ${response.body}");
+        return response.body;
+      } else {
+        print("Failed to send weights. Status: ${response.statusCode}");
+        return "Failed to send weights.";
+      }
+    } catch (e) {
+      print("Error sending weights to server: $e");
+      return "Error sending weights to server.";
+    }
+  }
+
+  // Receive aggregated model from the server
+  Future<String> receiveAggregatedModel() async {
+    // Example of a more complex model aggregation logic
+    try {
+      var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");
+      var response = await http.get(url);
+
+      if (response.statusCode == 200) {
+        print("Aggregated model received: ${response.body}");
+        return response.body;
+      } else {
+        print("Failed to receive aggregated model. Status: ${response.statusCode}");
+        return "Failed to receive aggregated model.";
+      }
+    } catch (e) {
+      print("Error receiving aggregated model: $e");
+      return "Error receiving aggregated model.";
     }
   }
 
