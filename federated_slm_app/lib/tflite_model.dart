@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:math';
 import 'package:flutter/services.dart';
 import 'package:http/http.dart' as http;
 import 'package:tflite_flutter/tflite_flutter.dart';
@@ -7,6 +8,7 @@ class TensorFlowLiteModel {
   Interpreter? _interpreter;
   Map<String, dynamic>? _tokenizer; // Tokenizer data
   List<List<double>>? _modelWeights;
+  int _dataCount = 1000;  // Simulate number of data points each client has
 
   // Load model and tokenizer
   Future<String> loadModel() async {
@@ -19,10 +21,10 @@ class TensorFlowLiteModel {
       
       // Initialize empty weights
       _modelWeights = [];
-      
+
       return "Model and tokenizer loaded!";
     } catch (e) {
-      return "Model and tokenizer loaded!";
+      return "Error loading model: $e";
     }
   }
 
@@ -51,13 +53,19 @@ class TensorFlowLiteModel {
     return paddedSequence;
   }
 
-  // Simulate local model update by generating random model weights (for now)
+  // Simulate local model update by generating random model weights (with a normal distribution)
   void simulateLocalUpdate() {
     print("Simulating local model update...");
     
-    // Generating some random weights for the model (as an example)
+    // Generate model weights using a normal distribution with mean 0 and standard deviation 0.1
+    Random random = Random();
+
     _modelWeights = List.generate(
-        10, (index) => List.generate(10, (index) => (index + 1).toDouble())
+      10, 
+      (index) => List.generate(
+        10, 
+        (index) => random.nextDouble() * 0.2 - 0.1,  // Random weights between -0.1 and 0.1
+      ),
     );
   }
 
@@ -85,7 +93,10 @@ class TensorFlowLiteModel {
       var response = await http.post(
         url,
         headers: {'Content-Type': 'application/json'},
-        body: jsonEncode({"weights": modelWeights}),
+        body: jsonEncode({
+          "weights": modelWeights,
+          "data_count": _dataCount,  // Send number of data points
+        }),
       );
 
       if (response.statusCode == 200) {
@@ -103,7 +114,6 @@ class TensorFlowLiteModel {
 
   // Receive aggregated model from the server
   Future<String> receiveAggregatedModel() async {
-    // Example of a more complex model aggregation logic
     try {
       var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");
       var response = await http.get(url);

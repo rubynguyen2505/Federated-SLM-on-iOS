@@ -41,20 +41,27 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
     });
   }
 
-  // Simulate federated learning process
+  // Simulate federated learning process with multiple rounds
   void simulateFederatedLearning() async {
-    // Simulate local model update
-    _model.simulateLocalUpdate();
+    // Simulate several rounds of federated learning
+    for (int round = 1; round <= 5; round++) {
+      print("Round $round: Starting federated learning update...");
 
-    // Send model weights to the server for aggregation
-    String sendResponse = await _model.sendWeightsToServer(_model.modelWeights!);
+      // Simulate local model update
+      _model.simulateLocalUpdate();
 
-    // Receive aggregated model from the server
-    String receiveResponse = await _model.receiveAggregatedModel();
+      // Send model weights to the server for aggregation
+      String sendResponse = await _model.sendWeightsToServer(_model.modelWeights!);
 
-    setState(() {
-      _status = "Federated learning demo completed: $sendResponse, $receiveResponse";
-    });
+      // Receive aggregated model from the server
+      String receiveResponse = await _model.receiveAggregatedModel();
+
+      setState(() {
+        _status = "Round $round: $sendResponse, $receiveResponse";
+      });
+
+      await Future.delayed(Duration(seconds: 2));  // Simulate waiting time for the next round
+    }
   }
 
   @override

@@ -13,8 +13,30 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 ---
 
 ## **📂 Project Structure**
-Federated-SLM-on-iOS/ ├── server/
-│ ├── app.py # FL server handling model updates │ ├── requirements.txt # Server dependencies │ ├── aggregate_model.py # Aggregates model weights from clients ├── models/ │ ├── preprocess_data.py # Preprocesses text data for FL │ ├── load_federated_data.py # Converts preprocessed data into TFF format │ ├── train_federated_model.py # Federated learning training script │ ├── model.tflite # Trained TFLite model for iOS ├── iOSApp/ │ ├── Podfile # CocoaPods dependencies for TensorFlow Lite │ ├── iOSApp.xcodeproj/ # Xcode project │ ├── Model/ │ │ ├── TFLiteModel.swift # Loads & runs TFLite model on iOS │ ├── Views/ │ │ ├── ContentView.swift # UI for input & model results │ ├── FederatedUpdates/ │ │ ├── LocalTraining.swift # Runs on-device training │ │ ├── ServerCommunication.swift # Communicates with FL server
+Federated-SLM-on-iOS/ 
+├── .github/ 
+│ ├── workflows/ 
+│ │ ├── flutter_ios_build.yml
+├── federated_slm_app/ 
+│ ├── assets/ 
+│ │ ├── model.tflite
+│ │ ├── tokenizer.json
+│ ├── ios/
+│ │ ├── Podfile # CocoaPods dependencies for TensorFlow Lite 
+│ ├── lib/ 
+│ │ ├── tflite_mode.dart # Loads & runs TFLite model on iOS 
+│ │ ├── main.dart # UI for input & model results 
+│ ├── pubspec.yaml
+├── server/
+│ ├── app.py # FL server handling model updates 
+│ ├── requirements.txt # Server dependencies 
+│ ├── aggregate_model.py # Aggregates model weights from clients 
+├── models/ 
+│ ├── preprocess_data.py # Preprocesses text data for FL 
+│ ├── load_federated_data.py # Converts preprocessed data into TFF format 
+│ ├── train_federated_model.py # Federated learning training script 
+│ ├── model.tflite # Trained TFLite model for iOS 
+
 
 
 ---
