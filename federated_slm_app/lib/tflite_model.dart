@@ -16,8 +16,8 @@ class TensorFlowLiteModel {
       _interpreter = await Interpreter.fromAsset('assets/model.tflite');
       
       // Load tokenizer
-      String jsonString = await rootBundle.loadString('assets/tokenizer.json');
-      _tokenizer = jsonDecode(jsonString);
+      // String jsonString = await rootBundle.loadString('assets/tokenizer.json');
+      // _tokenizer = jsonDecode(jsonString);
       
       // Initialize empty weights
       _modelWeights = [];
