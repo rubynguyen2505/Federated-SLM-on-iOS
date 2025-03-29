@@ -475,3 +475,5 @@ These scripts will preprocess data, load federated data, and train a federated m
    b. Send model weights to the Flask server.
 
    c. Receive the aggregated model back from the serve
+
+3. **Run the `TEST.ipynb` file in `server/` folder on Google Colab to see benchamark results**

@@ -3,4 +3,3 @@ numpy
 tensorflow
 tensorflow-datasets
 tensorflow-federated
-matplotlib
