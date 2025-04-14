@@ -13,7 +13,7 @@ class TensorFlowLiteModel {
   // Load model and tokenizer
   Future<String> loadModel() async {
     try {
-      _interpreter = await Interpreter.fromAsset('model.tflite');
+      _interpreter = await Interpreter.fromAsset('assets/model.tflite');
       
       // Load tokenizer
       String jsonString = await rootBundle.loadString('assets/tokenizer.json');
