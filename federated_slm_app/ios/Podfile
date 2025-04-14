@@ -15,17 +15,20 @@ target 'Runner' do
   # Ensure Flutter dependencies are installed
   flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
 
-  post_install do |installer|
-    installer.pods_project.targets.each do |target|
-      target.build_configurations.each do |config|
-        config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'NO'
-        config.build_settings['STRIP_STYLE'] = 'non-global'
-      end
-    end
-  end
-
+  
   target 'RunnerTests' do
     inherit! :search_paths
     # Pods for testing
   end
 end
+
+post_install do |installer|
+  installer.pods_project.targets.each do |target|
+    target.build_configurations.each do |config|
+      config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'NO'
+      config.build_settings['STRIP_STYLE'] = 'non-global'
+      config.build_settings['DEAD_CODE_STRIPPING'] = 'NO'
+    end
+  end
+end
+
