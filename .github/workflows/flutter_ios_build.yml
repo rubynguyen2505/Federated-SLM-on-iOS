@@ -51,6 +51,22 @@ jobs:
           cd ios
           xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
 
+      # Post-process to embed TensorFlowLiteC.framework in .app
+      - name: Embed TensorFlowLiteC.framework
+        run: |
+          # Set environment variables
+          APP_DIR="federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app"
+          FRAMEWORK_DIR="Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework/ios-arm64/TensorFlowLiteC.framework"
+          
+          # Create a Frameworks directory inside Runner.app if it doesn't exist
+          mkdir -p "$APP_DIR/Frameworks"
+          
+          # Copy the TensorFlowLiteC.framework to the app
+          cp -R "$FRAMEWORK_DIR" "$APP_DIR/Frameworks/"
+          
+          # Optional: Check if the framework was copied successfully
+          ls "$APP_DIR/Frameworks/"
+
       # List contents of the .xcarchive to confirm .app exists
       - name: List contents of .xcarchive
         run: |
