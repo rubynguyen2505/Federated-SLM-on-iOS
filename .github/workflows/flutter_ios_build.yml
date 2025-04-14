@@ -59,7 +59,7 @@ jobs:
           APP_DIR="federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app"
           
           # Path to TensorFlowLiteC.framework in the Pods directory
-          FRAMEWORK_DIR="$PWD/ios/Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework/ios-arm64/TensorFlowLiteC.framework"
+          FRAMEWORK_DIR="$PWD/federated_slm_app/ios/Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework/ios-arm64/TensorFlowLiteC.framework"
           
           # Check if the framework exists in the directory
           if [ -d "$FRAMEWORK_DIR" ]; then
