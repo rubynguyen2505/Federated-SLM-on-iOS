@@ -44,6 +44,17 @@ post_install do |installer|
       end
     end
   end
+
+  # Add custom script phase to embed TensorFlowLiteC.framework
+  installer.pods_project.targets.each do |target|
+    next unless target.name == 'Runner'
+
+    phase = target.shell_script_build_phases.find { |p| p.name == "Embed TensorFlowLiteC" }
+    unless phase
+      phase = target.new_shell_script_build_phase("Embed TensorFlowLiteC")
+      phase.shell_script = "${SRCROOT}/embed_tensorflowlitec.sh"
+    end
+  end
 end
 
 
