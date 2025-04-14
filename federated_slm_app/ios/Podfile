@@ -30,5 +30,20 @@ post_install do |installer|
       config.build_settings['DEAD_CODE_STRIPPING'] = 'NO'
     end
   end
+
+  # Force embed TensorFlowLiteC by adding it to the Runner target
+  installer.aggregate_targets.each do |aggregate_target|
+    next unless aggregate_target.name == 'Runner'
+
+    aggregate_target.user_project.native_targets.each do |native_target|
+      native_target.build_configurations.each do |config|
+        config.build_settings['OTHER_LDFLAGS'] ||= ''
+        config.build_settings['OTHER_LDFLAGS'] << ' -framework TensorFlowLiteC'
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= '$(inherited)'
+        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << ' $(PROJECT_DIR)/Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework/ios-arm64'
+      end
+    end
+  end
 end
+
 

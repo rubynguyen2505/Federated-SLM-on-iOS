@@ -23,16 +23,11 @@ jobs:
         with:
           flutter-version: '3.13.6'
 
-      # Clean previous builds (optional but recommended)
-      - name: Clean previous builds
-        run: |
-          cd federated_slm_app
-          flutter clean
-
       # Install dependencies (flutter packages)
       - name: Install Flutter dependencies
         run: |
           cd federated_slm_app
+          flutter clean
           flutter pub get
       
       # Install iOS dependencies (CocoaPods)
@@ -40,6 +35,7 @@ jobs:
         run: |
           cd federated_slm_app
           cd ios
+          pod deintegrate
           pod install
 
       # Build iOS app without signing
