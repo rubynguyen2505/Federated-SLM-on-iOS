@@ -7,10 +7,10 @@ load File.join(flutter_root, 'ios', 'Flutter', 'podhelper.rb')
 
 target 'Runner' do
   # Enable dynamic frameworks to properly link TensorFlow Lite
-  use_frameworks! :linkage => :dynamic
+  use_frameworks! :linkage => :static
 
   # Pods for Runner
-  pod 'TensorFlowLiteC'
+  pod 'TensorFlowLiteC', :modular_headers => false
 
   # Ensure Flutter dependencies are installed
   flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
@@ -28,31 +28,6 @@ post_install do |installer|
       config.build_settings['STRIP_INSTALLED_PRODUCT'] = 'NO'
       config.build_settings['STRIP_STYLE'] = 'non-global'
       config.build_settings['DEAD_CODE_STRIPPING'] = 'NO'
-    end
-  end
-
-  # Force embed TensorFlowLiteC by adding it to the Runner target
-  installer.aggregate_targets.each do |aggregate_target|
-    next unless aggregate_target.name == 'Runner'
-
-    aggregate_target.user_project.native_targets.each do |native_target|
-      native_target.build_configurations.each do |config|
-        config.build_settings['OTHER_LDFLAGS'] ||= ''
-        config.build_settings['OTHER_LDFLAGS'] << ' -framework TensorFlowLiteC'
-        config.build_settings['FRAMEWORK_SEARCH_PATHS'] ||= '$(inherited)'
-        config.build_settings['FRAMEWORK_SEARCH_PATHS'] << ' $(PROJECT_DIR)/Pods/TensorFlowLiteC/Frameworks/TensorFlowLiteC.xcframework/ios-arm64'
-      end
-    end
-  end
-
-  # Add custom script phase to embed TensorFlowLiteC.framework
-  installer.pods_project.targets.each do |target|
-    next unless target.name == 'Runner'
-
-    phase = target.shell_script_build_phases.find { |p| p.name == "Embed TensorFlowLiteC" }
-    unless phase
-      phase = target.new_shell_script_build_phase("Embed TensorFlowLiteC")
-      phase.shell_script = "${SRCROOT}/embed_tensorflowlitec.sh"
     end
   end
 end

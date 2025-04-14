@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'tflite_model.dart';
 import 'dart:math';
 
-void main() {
+void main() async {
+  // Ensure Flutter engine is fully initialized before any platform channel calls
+  WidgetsFlutterBinding.ensureInitialized();
+  
   runApp(MyApp());
 }
 
@@ -32,10 +35,13 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
   @override
   void initState() {
     super.initState();
-    loadModel();
+
+    // Delayed model loading after the widget is initialized
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      loadModel();
+    });
   }
 
-  // Load the model when the app starts
   void loadModel() async {
     String result = await _model.loadModel();
     setState(() {
@@ -50,7 +56,6 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
       _model.localUpdate();
 
       String sendResponse = await _model.sendWeightsToServer(_model.modelWeights!);
-
       String receiveResponse = await _model.receiveAggregatedModel();
 
       setState(() {
@@ -59,7 +64,6 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
       });
 
       Random random = Random();
-
       await Future.delayed(Duration(seconds: random.nextInt(8) + 1));
     }
   }
@@ -80,7 +84,6 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            // Display current status
             Text(
               _status,
               style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
@@ -91,7 +94,6 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
               child: Text('Start Federated Learning Simulation'),
             ),
             SizedBox(height: 20),
-            // Show aggregated weights in a collapsible section
             ExpansionTile(
               title: Text('Aggregated Model Weights'),
               children: [
@@ -100,7 +102,7 @@ class _FederatedLearningDemoState extends State<FederatedLearningDemo> {
                   width: MediaQuery.of(context).size.width * 0.8,
                   padding: EdgeInsets.all(8.0),
                   child: Scrollbar(
-                    thumbVisibility: true, // Adds a scrollbar for better scrolling
+                    thumbVisibility: true,
                     child: SingleChildScrollView(
                       child: ConstrainedBox(
                         constraints: BoxConstraints(
