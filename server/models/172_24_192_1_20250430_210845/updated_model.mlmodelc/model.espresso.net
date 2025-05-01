@@ -1,0 +1,117 @@
+{
+  "storage" : "model.espresso.weights",
+  "analyses" : {
+
+  },
+  "properties" : {
+
+  },
+  "format_version" : 200,
+  "metadata_in_weights" : [
+
+  ],
+  "layers" : [
+    {
+      "size_of_axes" : 1,
+      "bottom" : "embedding_input",
+      "axes_0" : -1,
+      "weights" : {
+
+      },
+      "nd_axis" : 0,
+      "debug_info" : "sequential\/embedding\/embedding_lookup_expand_dims",
+      "top" : "sequential\/embedding\/embedding_lookup_expand_dims",
+      "type" : "expand_dims",
+      "name" : "sequential\/embedding\/embedding_lookup_expand_dims"
+    },
+    {
+      "nB" : 10000,
+      "top" : "sequential\/embedding\/embedding_lookup",
+      "has_biases" : 0,
+      "nd_mode" : true,
+      "nC" : 128,
+      "blob_weights" : 1,
+      "weights" : {
+
+      },
+      "is_lookup" : 1,
+      "type" : "inner_product",
+      "has_relu" : 0,
+      "bottom" : "sequential\/embedding\/embedding_lookup_expand_dims",
+      "debug_info" : "sequential\/embedding\/embedding_lookup",
+      "has_tanh" : 0,
+      "hint_fallback_from_metal" : 1,
+      "name" : "sequential\/embedding\/embedding_lookup",
+      "has_prelu" : 0
+    },
+    {
+      "name" : "sequential\/flatten\/Reshape",
+      "weights" : {
+
+      },
+      "dst_w" : 12800,
+      "version" : 1,
+      "dst_n" : 1,
+      "dst_nd_rank" : 2,
+      "type" : "reshape",
+      "dst_h" : -1,
+      "mode" : 0,
+      "dynamic_shape" : false,
+      "bottom" : "sequential\/embedding\/embedding_lookup",
+      "debug_info" : "sequential\/flatten\/Reshape",
+      "dst_seq" : 1,
+      "dst_k" : 1,
+      "top" : "sequential\/flatten\/Reshape"
+    },
+    {
+      "nB" : 12800,
+      "top" : "sequential\/dense1\/Relu",
+      "has_biases" : 1,
+      "weights" : {
+
+      },
+      "nC" : 64,
+      "blob_weights" : 5,
+      "type" : "inner_product",
+      "has_relu" : 1,
+      "bottom" : "sequential\/flatten\/Reshape",
+      "blob_biases" : 3,
+      "has_tanh" : 0,
+      "debug_info" : "sequential\/dense1\/BiasAdd",
+      "name" : "sequential\/dense1\/BiasAdd",
+      "has_prelu" : 0
+    },
+    {
+      "nB" : 64,
+      "top" : "output_r",
+      "has_biases" : 1,
+      "weights" : {
+
+      },
+      "nC" : 2,
+      "blob_weights" : 9,
+      "type" : "inner_product",
+      "has_relu" : 0,
+      "bottom" : "sequential\/dense1\/Relu",
+      "blob_biases" : 7,
+      "has_tanh" : 0,
+      "debug_info" : "sequential\/output\/BiasAdd",
+      "name" : "sequential\/output\/BiasAdd",
+      "has_prelu" : 0
+    },
+    {
+      "bottom" : "output_r",
+      "attributes" : {
+        "is_output" : 1
+      },
+      "weights" : {
+
+      },
+      "debug_info" : "softmax",
+      "top" : "Identity",
+      "C" : 2,
+      "type" : "softmax",
+      "name" : "softmax"
+    }
+  ]
+}

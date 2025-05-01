@@ -1,0 +1,142 @@
+[
+  {
+    "metadataOutputVersion" : "3.0",
+    "shortDescription" : "Updatable IMDB sentiment classifier",
+    "outputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32)",
+        "shortDescription" : "",
+        "shape" : "[]",
+        "name" : "Identity",
+        "type" : "MultiArray"
+      }
+    ],
+    "storagePrecision" : "Float32",
+    "modelParameters" : [
+
+    ],
+    "author" : "Your Name",
+    "specificationVersion" : 4,
+    "updateParameters" : [
+      {
+        "defaultValue" : "5",
+        "allowedSet" : "[5]",
+        "scope" : "",
+        "name" : "epochs",
+        "dataType" : "Int64",
+        "shortDescription" : "Default number of iterations during training"
+      },
+      {
+        "defaultValue" : "true",
+        "scope" : "",
+        "name" : "shuffle",
+        "dataType" : "Bool",
+        "shortDescription" : "Controls whether data is shuffled on each epoch"
+      },
+      {
+        "defaultValue" : "0.010000",
+        "scope" : "",
+        "allowedRange" : "[0.000000, 1.000000]",
+        "name" : "learningRate",
+        "dataType" : "Double",
+        "shortDescription" : "Controls learning step size. Adjustable in progress"
+      },
+      {
+        "defaultValue" : "32",
+        "allowedSet" : "[32]",
+        "scope" : "",
+        "name" : "miniBatchSize",
+        "dataType" : "Int64",
+        "shortDescription" : "Number of examples used to compute single gradient step"
+      },
+      {
+        "defaultValue" : "0.900000",
+        "scope" : "",
+        "allowedRange" : "[0.000000, 1.000000]",
+        "name" : "beta1",
+        "dataType" : "Double",
+        "shortDescription" : "Controls the exponential decay rate for the first moment estimates"
+      },
+      {
+        "defaultValue" : "0.999000",
+        "scope" : "",
+        "allowedRange" : "[0.000000, 1.000000]",
+        "name" : "beta2",
+        "dataType" : "Double",
+        "shortDescription" : "Controls the exponential decay rate for the second moment estimates"
+      },
+      {
+        "defaultValue" : "0.000000",
+        "scope" : "",
+        "allowedRange" : "[0.000000, 1.000000]",
+        "name" : "eps",
+        "dataType" : "Double",
+        "shortDescription" : "A very small number to prevent any division by zero in the implementation"
+      }
+    ],
+    "isUpdatable" : "1",
+    "computePrecision" : "Float16",
+    "availability" : {
+      "macOS" : "10.15",
+      "tvOS" : "13.0",
+      "visionOS" : "1.0",
+      "watchOS" : "6.0",
+      "iOS" : "13.0",
+      "macCatalyst" : "13.0"
+    },
+    "modelType" : {
+      "name" : "MLModelType_neuralNetwork"
+    },
+    "inputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 100)",
+        "shortDescription" : "",
+        "shape" : "[1, 100]",
+        "name" : "embedding_input",
+        "type" : "MultiArray"
+      }
+    ],
+    "userDefinedMetadata" : {
+      "com.github.apple.coremltools.version" : "6.3.0",
+      "com.github.apple.coremltools.source" : "tensorflow==2.12.0"
+    },
+    "generatedClassName" : "imdb_updatable_model",
+    "neuralNetworkLayerTypeHistogram" : {
+      "ReshapeStatic" : 1,
+      "Softmax" : 1,
+      "InnerProduct" : 2,
+      "ExpandDims" : 1,
+      "ActivationReLU" : 1,
+      "EmbeddingND" : 1
+    },
+    "trainingInputSchema" : [
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Float32",
+        "formattedType" : "MultiArray (Float32 1 × 100)",
+        "shortDescription" : "",
+        "shape" : "[1, 100]",
+        "name" : "embedding_input",
+        "type" : "MultiArray"
+      },
+      {
+        "hasShapeFlexibility" : "0",
+        "isOptional" : "0",
+        "dataType" : "Int32",
+        "formattedType" : "MultiArray (Int32 1)",
+        "shortDescription" : "",
+        "shape" : "[1]",
+        "name" : "Identity_true",
+        "type" : "MultiArray"
+      }
+    ],
+    "method" : "predict"
+  }
+]

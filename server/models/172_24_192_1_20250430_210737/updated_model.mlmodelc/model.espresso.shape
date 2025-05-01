@@ -1,0 +1,53 @@
+{
+  "layer_shapes" : {
+    "sequential\/embedding\/embedding_lookup" : {
+      "k" : 1,
+      "w" : 128,
+      "n" : 1,
+      "_rank" : 3,
+      "h" : 100
+    },
+    "output_r" : {
+      "k" : 1,
+      "w" : 2,
+      "n" : 1,
+      "_rank" : 2,
+      "h" : 1
+    },
+    "Identity" : {
+      "k" : 1,
+      "w" : 2,
+      "n" : 1,
+      "_rank" : 2,
+      "h" : 1
+    },
+    "sequential\/embedding\/embedding_lookup_expand_dims" : {
+      "k" : 1,
+      "w" : 1,
+      "n" : 1,
+      "_rank" : 3,
+      "h" : 100
+    },
+    "embedding_input" : {
+      "k" : 1,
+      "w" : 100,
+      "n" : 1,
+      "_rank" : 2,
+      "h" : 1
+    },
+    "sequential\/flatten\/Reshape" : {
+      "k" : 1,
+      "w" : 12800,
+      "n" : 1,
+      "_rank" : 2,
+      "h" : 1
+    },
+    "sequential\/dense1\/Relu" : {
+      "k" : 1,
+      "w" : 64,
+      "n" : 1,
+      "_rank" : 2,
+      "h" : 1
+    }
+  }
+}
