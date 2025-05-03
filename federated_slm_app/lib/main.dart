@@ -331,7 +331,7 @@ class _MyHomePageState extends State<MyHomePage> {
             const SizedBox(height: 10),
             ElevatedButton(
               onPressed: _isFederatedLearningRunning ? null : _startFederatedLearning,
-              style: ElevatedButton.styleFrom(backgroundColor: Colors.purple),
+              style: ElevatedButton.styleFrom(backgroundColor: Colors.blue),
               child: _isFederatedLearningRunning
                   ? const SizedBox(
                       height: 20,
