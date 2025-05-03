@@ -1,0 +1,23 @@
+PODS:
+  - Flutter (1.0.0)
+  - ZIPFoundation (0.9.19)
+
+DEPENDENCIES:
+  - Flutter (from `Flutter`)
+  - ZIPFoundation
+
+SPEC REPOS:
+  trunk:
+    - ZIPFoundation
+
+EXTERNAL SOURCES:
+  Flutter:
+    :path: Flutter
+
+SPEC CHECKSUMS:
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  ZIPFoundation: b8c29ea7ae353b309bc810586181fd073cb3312c
+
+PODFILE CHECKSUM: 807fdfbc28fdd87d4482a797096e7ad0338ba4f7
+
+COCOAPODS: 1.16.2
