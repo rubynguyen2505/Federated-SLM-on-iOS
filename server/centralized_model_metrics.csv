@@ -1,0 +1,2 @@
+model_type,accuracy,precision,recall,f1_score
+centralized,0.8272,0.827764246119734,0.8272,0.8270954085603113
