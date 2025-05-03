@@ -99,7 +99,7 @@ def convert_to_coreml():
     # # Set input type
     input_type = ct.TensorType(shape=(1, MAX_LEN), dtype=np.int32)
 
-    # Convert to neuralnetwork (REQUIRED for updatable)
+    # Convert to CoreML Neural Network
     mlmodel = ct.convert(
         model,
         convert_to="neuralnetwork",
@@ -107,13 +107,14 @@ def convert_to_coreml():
         compute_units=ct.ComputeUnit.ALL
     )
 
-    # Enable updatable and mark layers
+    # Enable updatable model
     old_spec = mlmodel.get_spec()
     old_spec.description.metadata.shortDescription = "Updatable IMDB sentiment classifier"
     old_spec.description.metadata.author = "Your Name"
     old_spec.isUpdatable = True
 
     old_nn = old_spec.neuralNetwork
+    # Delete the last layer (softmaxND) as it is incompatible with updatable models
     del old_nn.layers[-1] 
     second_to_last_index = len(old_nn.layers) - 1
 
@@ -122,6 +123,7 @@ def convert_to_coreml():
     ct.utils.save_spec(old_spec, "imdb_model.mlmodel")
     spec = ct.utils.load_spec("imdb_model.mlmodel")
 
+    # Add the last layer again as a softmax layer (not softmaxND) 
     softmax_layer = spec.neuralNetwork.layers.add()
     softmax_layer.name = "softmax"
     softmax_layer.softmax.MergeFromString(b"")
@@ -131,11 +133,13 @@ def convert_to_coreml():
     ct.utils.save_spec(spec, "imdb_model.mlmodel")
 
     builder = ct.models.neural_network.NeuralNetworkBuilder(spec=spec)
+    # Mark updatable layers
     builder.make_updatable([
         "sequential/output/BiasAdd",
         "sequential/dense1/BiasAdd"
     ])
 
+    # Set up the model for training
     builder.set_categorical_cross_entropy_loss(name="lossLayer", input='Identity')
     builder.set_adam_optimizer(ct.models.neural_network.AdamParams(lr=0.01, batch=32))
     builder.set_epochs(10)
@@ -160,7 +164,7 @@ def get_centralized_keras_model_score():
     pred_probs = model.predict(test_inputs)
     pred_labels = np.argmax(pred_probs, axis=1)
 
-    # Accuracy & F1
+    # Accuracy and other metrics
     acc = accuracy_score(test_labels, pred_labels)
     precision = precision_score(test_labels, pred_labels, average='weighted')
     recall = recall_score(test_labels, pred_labels, average='weighted')
@@ -185,7 +189,6 @@ def get_centralized_keras_model_score():
 
 create_pretrained_model()
 convert_to_coreml()
-print("Centralized Keras Model Score", get_centralized_keras_model_score())
 
 def read_compiled_weights(mlmodelc_path):
     layer_bytes = []
@@ -197,10 +200,12 @@ def read_compiled_weights(mlmodelc_path):
 
         f.read(4)
 
+        # Read the number of layers and their sizes
         while len(layer_bytes) < num_layers:
             layer_num, _, num_bytes, _ = struct.unpack('<iiii', f.read(16))
             layer_bytes.append((layer_num, num_bytes))
 
+        # Read the layer data
         for layer_num, num_bytes in layer_bytes:
             data = struct.unpack('f' * (num_bytes // 4), f.read(num_bytes))
             layer_data[layer_num] = data
@@ -220,10 +225,12 @@ def fedavg(weight_dicts):
     n = len(weight_dicts)
     all_keys = weight_dicts[0].keys()
 
+    # Iterate through each layer's weights and biases
     for key in all_keys:
         w_stack = np.stack([w[key]["weights"] for w in weight_dicts])
         b_stack = np.stack([w[key]["bias"] for w in weight_dicts])
 
+        # Calculate the average weights and biases
         avg[key] = {
             "weights": np.mean(w_stack, axis=0),
             "bias": np.mean(b_stack, axis=0)
@@ -231,7 +238,7 @@ def fedavg(weight_dicts):
     return avg
 
 def set_weights_in_model(base_model_path, avg_weights, output_model_path):
-    # Load model from .mlpackage
+    # Load the base model from .mlpackage
     model = ct.models.MLModel(base_model_path)
     spec = model.get_spec()
 
@@ -372,6 +379,7 @@ def receive_metrics():
 @app.route('/get_train_data', methods=['GET'])
 def get_train_data():
     subset_size = 50
+    # Get a random subset of training data
     indices = random.sample(range(len(val_texts)), subset_size)
     samples = [{"text": val_texts[i], "label": int(val_labels[i])} for i in indices]
     return {"data": samples}, 200
