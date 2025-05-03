@@ -57,10 +57,17 @@ For AMD: https://youtu.be/gY97OI-bTxE?si=FYskvw_nN0MXH1Qt
 
 We assume that you have your macOS machine up and running. If you have macOS as a virtual machine, then it is likely macOS Sonoma you are using if you followed the YouTube guides. We suggest that you get Xcode 15 as it is compatible with this macOS version. Otherwise, if you have a physical macOS machine, then install the Xcode version that is compatible with the macOS version you are running. Please visit this Apple's Developer website to download Xcode to your macOS machine: https://developer.apple.com/download/all/?q=Xcode
 
-Once you have downloaded Xcode and extracted it as an application file, you will see something like this when Xcode is opened for the first time:
+Once you have downloaded Xcode and extracted it as an application file, you will see something like this when Xcode is opened for the first time. Make sure to check the iOS platform for installation:
 
 ![Screenshot](guide_images/xcode.png)
 
+### 2. Install Homebrew, Git, and CocoaPods
+
+Please visit this link: https://brew.sh/ for guide on how to install Homebrew and add it to PATH on your macOS machine. Once you have successfully installed Homebrew and added it to PATH, you should be able to run this command:
+
+```bash
+brew --version
+```
 ### 2. Install Flutter
 
 Follow the instructions from the [Flutter installation guide](https://flutter.dev/docs/get-started/install) to install Flutter on WSL Ubuntu. Ensure you have a working Flutter environment set up.
