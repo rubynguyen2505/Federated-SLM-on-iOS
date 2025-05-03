@@ -50,6 +50,7 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 To setup the experiment, you will need a macOS machine and an iPhone running on iOS 16.0 or later with an active AppleID. For the macOS machine, it is recommended that you have a physical machine that runs on macOS operating system for ease of setup. If you only have a Windows machine, then we highly recommend that you use VMWare to host a virtual machine that runs on macOS, just like how we did. Please refer to these YouTube guides to setup a macOS virtual machine on your Windows physical machine:
 
 For Intel: https://youtu.be/Fq6j9CS7C5g?si=lfUbLvTTYuZOxFlc
+
 For AMD: https://youtu.be/gY97OI-bTxE?si=FYskvw_nN0MXH1Qt
 
 ### 1. Install Xcode
