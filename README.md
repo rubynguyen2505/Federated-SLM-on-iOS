@@ -4,13 +4,6 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 
 ---
 
-## **📌 Features**
-✅ **Federated Learning Setup**: Uses TensorFlow Federated (TFF) to train SLMs across multiple clients.  
-✅ **On-Device Training & Inference**: Deploys models to iOS using TensorFlow Lite (TFLite).  
-✅ **FL Server for Model Aggregation**: A simple Flask-based server aggregates model updates.  
-
----
-
 ## Table of Contents
 
 1. [Project Structure](#project-structure)
@@ -28,28 +21,25 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 ## Project Structure
 
 ```
-├── .github/ 
-│ ├── workflows/ 
-│ │ ├── flutter_ios_build.yml
 ├── federated_slm_app/ 
-│ ├── assets/ 
-│ │ ├── model.tflite
-│ │ ├── tokenizer.json
 │ ├── ios/
-│ │ ├── Podfile # CocoaPods dependencies for TensorFlow Lite 
+│ │ ├── Runner/
+│ │ │ ├── imdb_updatable_model.mlpackage # The updatable base model for federated learning
+│ │ │ ├── AppDelegate.swift # Client logic for handling on-device training/inference
+│ │ │ ├── tokenizer.json # Distributed tokenizer for tokenizing text inputs
+│ │ ├── Podfile # CocoaPods dependencies 
 │ ├── lib/ 
-│ │ ├── tflite_mode.dart # Loads & runs TFLite model on iOS 
 │ │ ├── main.dart # UI for input & model results 
-│ ├── pubspec.yaml
+│ ├── pubspec.yaml # Flutter specifications and dependencies
 ├── server/
-│ ├── app.py # FL server handling model updates 
-│ ├── requirements.txt # Server dependencies 
-│ ├── aggregate_model.py # Aggregates model weights from clients 
-├── models/ 
-│ ├── preprocess_data.py # Preprocesses text data for FL 
-│ ├── load_federated_data.py # Converts preprocessed data into TFF format 
-│ ├── train_federated_model.py # Federated learning training script 
-│ ├── model.tflite # Trained TFLite model for iOS 
+│ ├── models/ # Extracted models from clients
+│ ├── uploads/ # Uploaded compressed models from clients 
+│ ├── app.py # FL server handling distributed training/test data, obtaining metrics, and model aggregation
+│ ├── aggregated_model.mlmodel # Global model aggregated from clients 
+│ ├── benchmark.py # Visualize metrics 
+│ ├── imdb_model.keras # Centralized model for comparison
+├── requirements.txt # Server dependencies 
+
 ```
 
 
@@ -57,9 +47,18 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 
 ## Prerequisites
 
-### 1. Install WSL Ubuntu
+To setup the experiment, you will need a macOS machine and an iPhone running on iOS 16.0 or later with an active AppleID. For the macOS machine, it is recommended that you have a physical machine that runs on macOS operating system for ease of setup. If you only have a Windows machine, then we highly recommend that you use VMWare to host a virtual machine that runs on macOS, just like how we did. Please refer to these YouTube guides to setup a macOS virtual machine on your Windows physical machine:
 
-You can download Ubuntu from the Microsoft Store. Once WSL Ubuntu is set up. Clone this repository to a new project directory on your WSL Ubuntu environment. 
+For Intel: https://youtu.be/Fq6j9CS7C5g?si=lfUbLvTTYuZOxFlc
+For AMD: https://youtu.be/gY97OI-bTxE?si=FYskvw_nN0MXH1Qt
+
+### 1. Install Xcode
+
+We assume that you have your macOS machine up and running. If you have macOS as a virtual machine, then it is likely macOS Sonoma you are using if you followed the YouTube guides. We suggest that you get Xcode 15 as it is compatible with this macOS version. Otherwise, if you have a physical macOS machine, then install the Xcode version that is compatible with the macOS version you are running. Please visit this Apple's Developer website to download Xcode to your macOS machine: https://developer.apple.com/download/all/?q=Xcode
+
+Once you have downloaded Xcode and extracted it as an application file, you will see something like this when Xcode is opened for the first time:
+
+![Screenshot](guide_images/xcode.png)
 
 ### 2. Install Flutter
 

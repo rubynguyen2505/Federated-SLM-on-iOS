@@ -1,5 +1,8 @@
-flask
-numpy
-tensorflow
-tensorflow-datasets
-tensorflow-federated
+coremltools==7.0
+Flask==3.1.0
+matplotlib==3.10.1
+numpy==1.23.5
+pandas==2.2.3
+scikit-learn==1.6.1
+tensorflow==2.12.0
+tensorflow-datasets==4.9.8
