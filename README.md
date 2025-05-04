@@ -47,11 +47,15 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 
 ## Prerequisites
 
-To setup the experiment, you will need a macOS machine and an iPhone running on iOS 16.0 or later with an active AppleID. For the macOS machine, it is recommended that you have a physical machine that runs on macOS operating system for ease of setup. If you only have a Windows machine, then we highly recommend that you use VMWare to host a virtual machine that runs on macOS, just like how we did. Please refer to these YouTube guides to setup a macOS virtual machine on your Windows physical machine:
+**Please read through this Prerequisites section before you clone this repository**
+
+To setup the project, you will need a macOS machine and an iPhone running on iOS 16.0 or later with an active AppleID. For the macOS machine, it is recommended that you have a physical machine that runs on macOS operating system for ease of setup. If you only have a Windows machine, then we highly recommend that you use VMWare to host a virtual machine that runs on macOS, just like how we did. Please refer to these YouTube guides to setup a macOS virtual machine on your Windows physical machine:
 
 For Intel: https://youtu.be/Fq6j9CS7C5g?si=lfUbLvTTYuZOxFlc
 
 For AMD: https://youtu.be/gY97OI-bTxE?si=FYskvw_nN0MXH1Qt
+
+Note that if you have a physical macOS machine, then setting up the server and building the iOS app will be done on the same codebase (you just need to clone this project once). Otherwise, if you have a macOS virtual machine, you'll need to clone this project twice. Once on your Windows environment with WSL Ubuntu to setup the server, and once on your macOS virtual machine to build the iOS app.
 
 ### 1. Install Xcode
 
@@ -63,66 +67,135 @@ Once you have downloaded Xcode and extracted it as an application file, you will
 
 ### 2. Install Homebrew, Git, and CocoaPods
 
-Please visit this link: https://brew.sh/ for guide on how to install Homebrew and add it to PATH on your macOS machine. Once you have successfully installed Homebrew and added it to PATH, you should be able to run this command:
+Git makes it easy to install and work with Flutter and building the iOS app later on while CocoaPods will make the process of managing dependencies on the Xcode project easier. To install Git and CocoaPods the easy way, we need to install Homebrew first on our macOS machine. 
+
+Follow the instructions from the [Homebrew installation guide](https://brew.sh/) to install Homebrew and add it to PATH on your macOS machine. Once you have successfully installed Homebrew and added it to PATH, you should be able to run this command on your macOS terminal:
 
 ```bash
 brew --version
 ```
-### 2. Install Flutter
 
-Follow the instructions from the [Flutter installation guide](https://flutter.dev/docs/get-started/install) to install Flutter on WSL Ubuntu. Ensure you have a working Flutter environment set up.
+Next, you will install Git and CocoaPods and add them to PATH via brew command, this can be done as followed:
 
-### 3. Install Python
+```bash
+brew install git
+brew install cocoapods
+```
 
-Ensure that you have Python 3.x installed on WSL Ubuntu. You can download and install Python from [python.org](https://www.python.org/downloads/).
+Once you have successfully installed Git and CocoaPods and added them to PATH, you should be able to run these commands:
 
-- Make sure that Python is added to your system's PATH during installation.
+```bash
+git --version
+pod --version
+```
+
+### 3. Install VSCode
+
+If you have macOS as a virtual machine, then you would need to have VSCode on both the Windows physical machine and the macOS virtual machine. Otherwise, you would only need to install VSCode once if it is a physical macOS machine.
+Follow the instructions from the [VSCode installation guide for Windows](https://code.visualstudio.com/docs/setup/windows) and the [VSCode installation guide for macOS](https://code.visualstudio.com/docs/setup/mac) to install VSCode and add it to PATH. 
+
+### 4. Install Flutter
+
+Flutter is needed to build our iOS app. Follow the instructions from the [Flutter installation guide](https://docs.flutter.dev/get-started/install/macos/mobile-ios) to install Flutter and add it to PATH on your macOS machine. 
+
+Once you have Flutter installed and added to PATH, you should be able to run this command on your macOS terminal:
+
+```bash
+flutter doctor
+```
+
+Make sure the summary should look something like this. All but the Android toolchain and development for the web sections should have a check mark before them. If you see the Xcode section have a cross mark, follow the instructions on the terminal to complete Xcode setup, then run 'flutter doctor' command again.
+
+![Screenshot](guide_images/flutter_doctor.png)
+
+### 5. Install Python
+
+Python is needed to setup the server side of the project. If you have a physical macOS machine, then you can simply use brew to install Python on it using the following command:
+
+```bash
+brew install python
+```
+
+Once Python is installed and added to PATH on your physical macOS machine, you should be able to run this command on your macOS terminal:
+
+```bash
+python3 --version
+```
+
+If you have macOS as a virtual machine, then simply having Python installed on the Windows environment is enough. You can download and install Python on your Windows machine from [python.org](https://www.python.org/downloads/).
+
+Make sure that Python is added to your system's PATH during installation. You can check with this command on your Wndows terminal:
+
+```
+python --version
+```
+
+## Clone the repository
+
+If you have either a physical or virtual macOS machine, open up a Terminal and clone the repository using this command:
+
+```bash
+git clone https://github.com/rubynguyen2505/Federated-SLM-on-iOS.git
+```
+
+If you are using a macOS virtual machine, additionally run the same command on a Terminal on your Windows machine.
 
 ## Install Virtual Environment
 
-It is recommended to set up a virtual environment for Python dependencies to avoid conflicts with global Python packages. Follow the steps below to set it up:
+Since our server is a Python Flask-based server, it is recommended to set up a virtual environment for Python dependencies to avoid conflicts with global Python packages. If you have a macOS virtual machine, only open up a Terminal on the Windows environment since that is where we setup the server. If you have a physical macOS machine, then open up a Terminal on it instead. Follow the steps below to set it up:
 
-1. **Open WSL Ubuntu**
+1. **Navigate** to where you cloned this repository 
 
-2. **Navigate** to where you cloned this repository 
-
-3. **Create a virtual environment** by running:
+2. **Create a virtual environment** (if on physical macOS):
 
    ```bash
    python3 -m venv tff_new_env
    ```
 
-4. **Activate the virtual environment:**
+   or if on Windows:
+
+   ```bash
+   python -m venv tff_new_env
+   ```
+
+3. **Activate the virtual environment** (if on physical macOS):
 
    ```bash
    source tff_new_env/bin/activate
    ```
 
-5. **Install required Python dependencies:**
+   or if on Windows:
+
+   ```bash
+   tff_new_env\Scripts\activate
+   ```
+
+5. **Install required Python dependencies** (if on physical macOS):
+
+   ```bash
+   pip3 install -r requirements.txt
+   ```
+
+   or if on Windows:
 
    ```bash
    pip install -r requirements.txt
-   ```
 
-## Training and Converting the TensorFlow Lite Model
+## Running the Flask server
 
-In the `models/` directory, you need to generate the TensorFlow Lite model (`model.tflite`) and tokenizer data (`tokenizer.json`). Follow these steps:
-
-1. **Navigate to the** `models/` **folder**:
+1. **Navigate** to the `server/` folder:
 
    ```bash
-   cd models
+   cd server
    ```
 
-2. **Generate the model and tokenizer files** by running the following Python scripts in sequence:
+2. **Run the Flask server** 
 
    ```bash
-   python3 preprocess_data.py
-   python3 load_federated_data.py
-   python3 train_federated_model.py
+   python3 app.py
    ```
 
-These scripts will preprocess data, load federated data, and train a federated model, resulting in the `model.tflite` and `tokenizer.json` files.
+   The server will be hosted locally at http://127.0.0.1:5000/.
 
 ## Setting Up the Flutter App
 
@@ -134,165 +207,6 @@ These scripts will preprocess data, load federated data, and train a federated m
 
 2. **Add** `model.tflite` **and** `tokenizer.json` to the `assets/` folder of the Flutter app if they are not there already.
 
-3. **Configure** `pubspec.yaml`:
-
-   Ensure you have the following configurations in `pubspec.yaml`:
-
-   ```yaml
-   name: federated_slm_app
-   description: A new Flutter project.
-   # The following line prevents the package from being accidentally published to
-   # pub.dev using `flutter pub publish`. This is preferred for private packages.
-   publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-   # The following defines the version and build number for your application.
-   # A version number is three numbers separated by dots, like 1.2.43
-   # followed by an optional build number separated by a +.
-   # Both the version and the builder number may be overridden in flutter
-   # build by specifying --build-name and --build-number, respectively.
-   # In Android, build-name is used as versionName while build-number used as versionCode.
-   # Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-   # In iOS, build-name is used as CFBundleShortVersionString while build-number is used as CFBundleVersion.
-   # Read more about iOS versioning at
-   # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-   # In Windows, build-name is used as the major, minor, and patch parts
-   # of the product and file versions while build-number is used as the build suffix.
-   version: 1.0.0+1
-
-   environment:
-     sdk: '>=3.1.3 <4.0.0'
-
-   # Dependencies specify other packages that your package needs in order to work.
-   # To automatically upgrade your package dependencies to the latest versions
-   # consider running `flutter pub upgrade --major-versions`. Alternatively,
-   # dependencies can be manually updated by changing the version numbers below to
-   # the latest version available on pub.dev. To see which dependencies have newer
-   # versions available, run `flutter pub outdated`.
-   dependencies:
-     flutter:
-       sdk: flutter
-     tflite_flutter: ^0.10.4  # TensorFlow Lite Flutter plugin
-     http: ^0.13.3
-
-
-     # The following adds the Cupertino Icons font to your application.
-     # Use with the CupertinoIcons class for iOS style icons.
-     cupertino_icons: ^1.0.2
-
-   dev_dependencies:
-     flutter_test:
-       sdk: flutter
-
-     # The "flutter_lints" package below contains a set of recommended lints to
-     # encourage good coding practices. The lint set provided by the package is
-     # activated in the `analysis_options.yaml` file located at the root of your
-     # package. See that file for information about deactivating specific lint
-     # rules and activating additional ones.
-     flutter_lints: ^2.0.0
-
-   # For information on the generic Dart part of this file, see the
-   # following page: https://dart.dev/tools/pub/pubspec
-
-   # The following section is specific to Flutter packages.
-   flutter:
-
-     # The following line ensures that the Material Icons font is
-     # included with your application, so that you can use the icons in
-     # the material Icons class.
-     uses-material-design: true
-
-     # To add assets to your application, add an assets section, like this:
-     # assets:
-     #   - images/a_dot_burr.jpeg
-     #   - images/a_dot_ham.jpeg
-     assets:
-       - assets/model.tflite
-       - assets/tokenizer.json
-
-     # An image asset can refer to one or more resolution-specific "variants", see
-     # https://flutter.dev/assets-and-images/#resolution-aware
-
-     # For details regarding adding assets from package dependencies, see
-     # https://flutter.dev/assets-and-images/#from-packages
-
-     # To add custom fonts to your application, add a fonts section here,
-     # in this "flutter" section. Each entry in this list should have a
-     # "family" key with the font family name, and a "fonts" key with a
-     # list giving the asset and other descriptors for the font. For
-     # example:
-     # fonts:
-     #   - family: Schyler
-     #     fonts:
-     #       - asset: fonts/Schyler-Regular.ttf
-     #       - asset: fonts/Schyler-Italic.ttf
-     #         style: italic
-     #   - family: Trajan Pro
-     #     fonts:
-     #       - asset: fonts/TrajanPro.ttf
-     #       - asset: fonts/TrajanPro_Bold.ttf
-     #         weight: 700
-     #
-     # For details regarding fonts from package dependencies,
-     # see https://flutter.dev/custom-fonts/#from-packages
-   ```
-
-4. **Configure** `Podfile` in `ios/` **folder**:
-
-   Ensure you have the following configurations in `Podfile`:
-
-   ```rb
-   # Uncomment the next line to define a global platform for your project
-   platform :ios, '12.0'
-
-   # Ensure Flutter environment is loaded before using Flutter-specific pod installation
-   flutter_root = File.expand_path('..', File.dirname(__FILE__))
-   load File.join(flutter_root, 'ios', 'Flutter', 'podhelper.rb')
-
-   target 'Runner' do
-     # Enable dynamic frameworks to properly link TensorFlow Lite
-     use_frameworks! :linkage => :dynamic
-
-     # Pods for Runner
-     pod 'TensorFlowLiteSwift'
-     pod 'TensorFlowLiteC'
-
-     # Ensure Flutter dependencies are installed
-     flutter_install_all_ios_pods(File.dirname(File.realpath(__FILE__)))
-
-     target 'RunnerTests' do
-       inherit! :search_paths
-       # Pods for testing
-     end
-   end
-   ```
-
-5. **Configure** `exportOptions.plist` in `ios/` **folder**:
-
-   Ensure you have the following configurations in `exportOptions.plist`:
-
-   ```bash
-   <?xml version="1.0" encoding="UTF-8"?>
-   <plist version="1.0">
-     <dict>
-       <key>method</key>
-       <string>development</string>
-       <key>signingStyle</key>
-       <string>manual</string>
-       <key>teamID</key>
-       <string></string>
-       <key>bundleID</key>
-       <string>com.example.yourapp</string>
-       <key>provisioningProfileSpecifier</key>
-       <string></string>
-       <key>uploadSymbols</key>
-       <true/>
-       <key>compileBitcode</key>
-       <false/>
-       <key>destination</key>
-       <string>export</string>
-     </dict>
-   </plist>
-   ```
 
 6. Get **WSL's primary IP**:
 
