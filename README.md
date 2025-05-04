@@ -304,6 +304,7 @@ Now, if you are using macOS virtual machine, open up a Terminal on the macOS env
 
    ```nginx
    inet 192.168.12.118
+   ```
 
    Your IPv4 address should have the form 192.168.x.x
 
