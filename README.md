@@ -11,7 +11,7 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 3. [Install Virtual Environment](#install-virtual-environment)
 4. [Running the Flask server](#running-the-flask-server)
 5. [Setting Up the Flutter App](#setting-up-the-flutter-app)
-9. [Running Federated Learning](#running-federated-learning)
+6. [Running Federated Learning](#running-federated-learning)
 
 ---
 
