@@ -9,11 +9,8 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 1. [Project Structure](#project-structure)
 2. [Prerequisites](#prerequisites)
 3. [Install Virtual Environment](#install-virtual-environment)
-4. [Training and Converting the TensorFlow Lite Model](#training-and-converting-the-tensorflow-lite-model)
+4. [Running the Flask server](#running-the-flask-server)
 5. [Setting Up the Flutter App](#setting-up-the-flutter-app)
-6. [Setting Up GitHub Actions for CI/CD](#setting-up-github-actions-for-cicd)
-7. [Converting Runner.app to Runner.ipa](#converting-runnerapp-to-runneripa)
-8. [Running the Flask Server](#running-the-flask-server)
 9. [Running Federated Learning](#running-federated-learning)
 
 ---
@@ -49,13 +46,13 @@ This repository implements a **Federated Learning (FL) system** for **Small Lang
 
 **Please read through this Prerequisites section before you clone this repository**
 
-To setup the project, you will need a macOS machine and an iPhone running on iOS 16.0 or later with an active AppleID. For the macOS machine, it is recommended that you have a physical machine that runs on macOS operating system for ease of setup. If you only have a Windows machine, then we highly recommend that you use VMWare to host a virtual machine that runs on macOS, just like how we did. Please refer to these YouTube guides to setup a macOS virtual machine on your Windows physical machine:
+To setup the project, you will need a macOS machine and an iPhone running on iOS 16.0 or later with an active AppleID. Make sure your iPhone's Developer Mode is enabled by going into `Settings -> Privacy & Security -> Developer Mode -> On`. For the macOS machine, it is recommended that you have a physical machine that runs on macOS operating system for ease of setup. If you only have a Windows machine, then we highly recommend that you use VMWare to host a virtual machine that runs on macOS, just like how we did. Please refer to these YouTube guides to setup a macOS virtual machine on your Windows physical machine:
 
 For Intel: https://youtu.be/Fq6j9CS7C5g?si=lfUbLvTTYuZOxFlc
 
 For AMD: https://youtu.be/gY97OI-bTxE?si=FYskvw_nN0MXH1Qt
 
-Note that if you have a physical macOS machine, then setting up the server and building the iOS app will be done on the same codebase (you just need to clone this project once). Otherwise, if you have a macOS virtual machine, you'll need to clone this project twice. Once on your Windows environment with WSL Ubuntu to setup the server, and once on your macOS virtual machine to build the iOS app.
+Note that if you have a physical macOS machine, then setting up the server and building the iOS app will be done on the same codebase (you just need to clone this project once). Otherwise, if you have a macOS virtual machine, you'll need to clone this project twice. Once on your Windows environment with WSL Ubuntu (and we highly suggest you use WSL Ubuntu if you are going this route) to setup the server, and once on your macOS virtual machine to build the iOS app.
 
 ### 1. Install Xcode
 
@@ -108,7 +105,12 @@ Make sure the summary should look something like this. All but the Android toolc
 
 ![Screenshot](guide_images/flutter_doctor.png)
 
-### 5. Install Python
+
+### 5. Install WSL Ubuntu (if you have macOS as a virtual machine)
+
+If you are using a physical Windows machine, we recommend using WSL Ubuntu to setup the server. You can download Ubuntu from the Microsoft Store. 
+
+### 6. Install Python
 
 Python is needed to setup the server side of the project. If you have a physical macOS machine, then you can simply use brew to install Python on it using the following command:
 
@@ -120,14 +122,20 @@ Once Python is installed and added to PATH on your physical macOS machine, you s
 
 ```bash
 python3 --version
+pip3 --version
 ```
 
-If you have macOS as a virtual machine, then simply having Python installed on the Windows environment is enough. You can download and install Python on your Windows machine from [python.org](https://www.python.org/downloads/).
+If you have macOS as a virtual machine, then you can open up a WSL Ubuntu Terminal and run the following command:
 
-Make sure that Python is added to your system's PATH during installation. You can check with this command on your Wndows terminal:
+```bash
+sudo apt install python3 python3-venv python3-pip
+```
+
+Make sure that Python is added to your system's PATH during installation. You can check with this command on your WSL Ubuntu terminal:
 
 ```
-python --version
+python3 --version
+pip --version
 ```
 
 ## Clone the repository
@@ -142,35 +150,27 @@ If you are using a macOS virtual machine, additionally run the same command on a
 
 ## Install Virtual Environment
 
-Since our server is a Python Flask-based server, it is recommended to set up a virtual environment for Python dependencies to avoid conflicts with global Python packages. If you have a macOS virtual machine, only open up a Terminal on the Windows environment since that is where we setup the server. If you have a physical macOS machine, then open up a Terminal on it instead. Follow the steps below to set it up:
+Since our server is a Python Flask-based server, it is recommended to set up a virtual environment for Python dependencies to avoid conflicts with global Python packages. If you have a macOS virtual machine, only open up a Terminal on the WSL Ubuntu environment since that is where we setup the server. If you have a physical macOS machine, then open up a Terminal on it instead. Follow the steps below to set it up:
 
-1. **Navigate** to where you cloned this repository 
+1. **Navigate** to where you cloned this repository:
 
-2. **Create a virtual environment** (if on physical macOS):
+   ```bash
+   cd Federated-SLM-on-iOS
+   ```
+
+2. **Create a virtual environment:**
 
    ```bash
    python3 -m venv tff_new_env
    ```
 
-   or if on Windows:
-
-   ```bash
-   python -m venv tff_new_env
-   ```
-
-3. **Activate the virtual environment** (if on physical macOS):
+3. **Activate the virtual environment:**
 
    ```bash
    source tff_new_env/bin/activate
    ```
 
-   or if on Windows:
-
-   ```bash
-   tff_new_env\Scripts\activate
-   ```
-
-5. **Install required Python dependencies** (if on physical macOS):
+5. **Install required Python dependencies** (if on macOS):
 
    ```bash
    pip3 install -r requirements.txt
@@ -183,195 +183,9 @@ Since our server is a Python Flask-based server, it is recommended to set up a v
 
 ## Running the Flask server
 
+After installing the Python dependencies required to setup the server, do the following:
+
 1. **Navigate** to the `server/` folder:
-
-   ```bash
-   cd server
-   ```
-
-2. **Run the Flask server** 
-
-   ```bash
-   python3 app.py
-   ```
-
-   The server will be hosted locally at http://127.0.0.1:5000/.
-
-## Setting Up the Flutter App
-
-1. **Navigate to the Flutter app directory:**
-
-   ```bash
-   cd federated_slm_app
-   ```
-
-2. **Add** `model.tflite` **and** `tokenizer.json` to the `assets/` folder of the Flutter app if they are not there already.
-
-
-6. Get **WSL's primary IP**:
-
-   The first IP will be your **WSL's local IP address**
-
-   ```bash
-   hostname -I
-   ```
-
-7. Now, on **Windows (not WSL)**, run this in **Powershell**:
-
-   ```powershell
-   ipconfig
-   ```
-   
-8. Look for the **Wireless LAN adapter Wi-Fi** or **Ethernet** section. You’ll see something like:
-
-   ```nginx
-   IPv4 Address: 192.168.12.118
-   ```
-
-9. **Forward Windows Port 5000 to WSL**
-
-   Run this **on Windows (PowerShell as Admin)** and replace YOUR_WIFI_IP with the Windows local IP found using `ipconfig` and YOUR_WSL_IP with the WSL's local IP using `hostname -I`:
-
-   ```powershell
-   netsh interface portproxy add v4tov4 listenaddress=YOUR_WIFI_IP listenport=5000 connectaddress=YOUR_WSL_IP connectport=5000
-   ```
-
-10. **Verify**:
-
-   ```powershell
-   netsh interface portproxy show all
-   ```
-
-11. **Allow Firewall Access on Windows**:
-
-   ```powershell
-   New-NetFirewallRule -DisplayName "Allow Flask 5000" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
-   ```
-
-12. Now back to the **Flutter App directory**, **Navigate** to `lib/tflite_model.dart` and **modify the following by replace** `192.168.12.118` with your **Windows local IP**:
-
-   ```bash
-   var url = Uri.parse("http://192.168.12.118:5000/get_aggregated_model");
-   ```
-
-## Setting Up GitHub Actions for CI/CD
-
-1. **Navigate back to the project directory.**
-
-2. **Navigate** to `.github/workflows/` **folder:**
-
-   ```bash
-   cd .github/workflows
-   ```
-
-3. **Configure** `flutter_ios_build.yml`:
-
-   Ensure you have the following configurations in `flutter_ios_build.yml`:
-
-   ```yml
-   name: Build iOS App for iOS without signing
-
-   on:
-     push:
-       branches:
-         - master
-     pull_request:
-       branches:
-         - master
-
-   jobs:
-     build:
-       runs-on: macos-latest  # Use macOS runner
-
-       steps:
-         # Checkout code from the repository
-         - name: Checkout code
-           uses: actions/checkout@v3
-
-         # Set up Flutter
-         - name: Set up Flutter
-           uses: subosito/flutter-action@v2
-           with:
-             flutter-version: '3.13.6'
-
-         # Clean previous builds (optional but recommended)
-         - name: Clean previous builds
-           run: |
-             cd federated_slm_app
-             flutter clean
-
-         # Install dependencies (flutter packages)
-         - name: Install Flutter dependencies
-           run: |
-             cd federated_slm_app
-             flutter pub get
-         
-         # Install iOS dependencies (CocoaPods)
-         - name: Install iOS CocoaPods dependencies
-           run: |
-             cd federated_slm_app
-             cd ios
-             pod install
-
-         # Build iOS app without signing
-         - name: Build iOS app without signing
-           run: |
-             cd federated_slm_app
-             flutter build ios --no-codesign
-
-         # Archive the iOS app (no signing)
-         - name: Archive iOS app
-           run: |
-             cd federated_slm_app
-             cd ios
-            xcodebuild -workspace Runner.xcworkspace -scheme Runner -configuration Release -archivePath $PWD/build/Runner.xcarchive archive -allowProvisioningUpdates CODE_SIGN_IDENTITY="" CODE_SIGNING_REQUIRED=NO
-
-         # List contents of the .xcarchive to confirm .app exists
-         - name: List contents of .xcarchive
-           run: |
-             cd federated_slm_app/ios
-             ls -R $PWD/build/Runner.xcarchive/Products/Applications/
-
-         # Upload the extracted .app as artifact
-         - name: Upload .app as artifact
-           uses: actions/upload-artifact@v4
-           with:
-             name: runner-app
-             path: federated_slm_app/ios/build/Runner.xcarchive/Products/Applications/Runner.app
-   ```
-
-4. **Push to GitHub:**
-
-   Push your code to GitHub, triggering the CI/CD pipeline. The build process will generate an artifact `runner-app.zip` that can be downloaded.
-
-5. **Download and extract the build artifact:**
-
-   After the build completes, download the artifact (`runner-app.zip`) from GitHub Actions and extract it to an empty folder on your Windows machine. Name that folder as `Runner.app`.
-
-## Converting Runner.app to Runner.ipa
-
-1. **Download** `apptoipa.exe` from the following link:
-
-   https://github.com/deqline/IPABundler
-
-2. Place `apptoipa.exe` **in the same directory** as `Runner.app`.
-
-3. Convert `Runner.app` to `Runner.ipa` by running the following command in the Command Prompt:
-
-   ```bash
-   apptoipa Runner.app
-   ```
-
-4. **Sideload the IPA:**
-
-   Use [Sideloadly](https://sideloadly.io/) to sideload the `Runner.ipa` onto your iPhone.
-
-   Make sure your iPhone is running iOS 17.5 or later and Developer Mode is enabled by:
-   `Settings -> Privacy & Security -> Devloper Mode -> On`
-
-## Running the Flask Server
-
-1. Going back to your project directory, **navigate to the** `server/` folder:
 
    ```bash
    cd server
@@ -383,18 +197,182 @@ Since our server is a Python Flask-based server, it is recommended to set up a v
    python3 app.py
    ```
 
-   The server will be hosted locally at http://127.0.0.1:5000/.
+   You will see that the server is pretraining a model over 10 epochs. Then it is saved as a TensorFlow model and loaded again to fine-tune for another 10 epochs. That model will serve as the centralized model and is also converted to CoreML format to be ditributed later to the clients. Then, you will see that the server will be hosted now locally at http://127.0.0.1:5000/.
+
+## Setting Up the Flutter App
+
+Now, if you are using macOS virtual machine, open up a Terminal on the macOS environment, preferably via VSCode, and navigate to where you cloned this repository. If you have a physical macOS machine, open up another Terminal since the first one is running the server already. Next, do the following:
+
+1. **Navigate to the Flutter app directory:**
+
+   ```bash
+   cd federated_slm_app
+   ```
+
+2. Assume you have Flutter installed and added to PATH, run the following commands:
+
+   ```bash
+   flutter clean
+   flutter pub get
+   flutter precache --ios
+   ```
+
+   The first command will do a cleanup of the Xcode workspace for precaution. The second command installs Flutter dependencies needed for the app and the third command installs and caches iOS tools and dependencies needed to build an iOS app.
+
+3. **Navigate** to the `ios/` directory:
+
+   ```bash
+   cd ios
+   ```
+
+4. Assume you have CocoaPods installed and added to PATH, run the following commands:
+
+   ```bash
+   pod deintegrate 
+   pod install
+   ```
+
+   Even though our app is a Flutter app, since we are building it for iOS, we have to rely on Swift and CocoaPods is one of the package managing tools often used when building a Swift app. Therefore these commands will do a clean install of any necessary dependencies needed for the Swift side of the app.
+
+5. Next, we need to make sure the Xcode workspace is setup and configured correctly. First, run this command, assuming you are still in the `ios/` directory:
+
+   ```bash
+   open Runner.xcworkspace
+   ```
+
+   This command will open up the workspace in Xcode application.
+
+6. Now, make sure the following 2 files: `imdb_updatable_model.mlpackage` and `tokenizer.json` are in your Runner folder that appears on Xcode. If not, you can follow the guide on the screenshot to add them to the Runner target.
+
+![Screenshot](guide_images/Runner_files.png)
+
+7. Next, click on the top level Runner folder. Select the target Runner, and click on 'Signing and Capabilities' tab as shown. Make sure you check the 'Automatically manage signing'. You also definitely will need an Apple ID to sign so log in and add your Team as shown. Then, change the Bundle Identifier if needed to get a unique identifier for your app. Make sure the Provisioning Profile and Signing Certificate are generated as shown.
+
+![Screenshot](guide_images/signing_capabilities.png)
+
+8. Change the tab from 'Signing and Capabilities' to 'Build Settings' and make sure the iOS deployment target is set to 16.0, and CoreML Model Class Generation Language is set to Swift as shown.
+
+![Screenshot](guide_images/deployment.png)
+
+![Screenshot](guide_images/coreml_compiler.png)
+
+9. Change the tab from 'Build Settings' to 'Build Phases' and make sure `imdb_updatable_model.mlpackage` is included in Compile Sources and `tokenizer.json` is included in Copy Bundle Resources. Once everything checks out in Xcode workspace, you can go ahead and close the Xcode application.
+
+10. Assuming you are back to the `ios/` directory, we next need to configure the HTTP address with which the client is going to communicate with the server. 
+
+   For that, please find the following 2 files and open them with VSCode:
+   
+   `AppDelegate.swift` that is located in `ios/Runner/`
+
+   `main.dart` that is located in the `lib/` folder. The `lib/` folder is on the same level as the `ios/` folder
+
+   For `AppDelegate.swift`, take note of:
+   
+   `line 214` in function `uploadModel()` 
+   `line 244` in function `callAggregationEndpoint()`
+   `line 261` in function `downloadAggregatedModel()`
+   `line 315` in function `sendMetricsToServer()`
+
+   For `main.dart`, take note of:
+
+   `line 49` in function `_fetchAndTrainFromServer()`
+   `line 81 and 82` in function `_fetchAndpredictFromServer()`
+
+   You will need to change the IP address at those lines to your own IP address.
+
+11. To find your own IP address:
+
+   If you are using macOS virtual machine, then, on **the Windows environment (not WSL)**, run this in **Powershell**:
+
+   ```powershell
+   ipconfig
+   ```
+
+   If you are using physical macOS machine, run this in a new Terminal:
+
+   ```bash
+   ifconfig
+   ```
+   
+12. Look for the **Wireless LAN adapter Wi-Fi** section (if on Windows) or the **en0** section (if on macOS). You’ll see something like:
+
+   ```nginx
+   IPv4 Address: 192.168.12.118
+   ```
+
+   or 
+
+   ```nginx
+   inet 192.168.12.118
+
+   Your IPv4 address should have the form 192.168.x.x
+
+13. Next, if using Windows, **allow Firewall Access on Windows**:
+
+   ```powershell
+   New-NetFirewallRule -DisplayName "Allow Flask 5000" -Direction Inbound -Protocol TCP -LocalPort 5000 -Action Allow
+   ```
+
+14. Now back to the **Flutter App**, replace the IP address `192.168.12.118:5000` at all the lines we told you to take note earlier with your IPv4 address `192.168.x.x:5000`
+
+14. Now, connect your iPhone to the macOS machine:
+
+   First, you need to connect your iPhone to your machine (whether it is a macOS or Windows machine) using a cable. Then, if you have a macOS virtual machine, do the following:
+
+   Assuming you are using VMWare Workstation Pro to host macOS if you followed the YouTube guides, click on the VM tab on the top bar, select 'Removable Devices' -> 'Apple iPhone' -> 'Connect'. You should see the 'Apple iPhone' checked after your iPhone is successfully connected via VMWare to your macOS virtual machine.
+
+   ![Screenshot](guide_images/connect_phone.png)
+
+15. Next, run the following command to verify that Flutter recognizes your connected iPhone:
+
+   ```bash
+   flutter devices
+   ```
+
+   It should list two devices like this, with the top one being your connected iPhone:
+
+   ![Screenshot](guide_images/flutter_devices.png)
+
+16. Then, run this command:
+
+   ```bash
+   flutter run -v
+   ```
+
+   This command will build, sign your iOS app and install it on your iPhone.
+
+   Note that, the first time you run this command, you may get stuck at the `Compiling and Signing' phase as shown. A popup with verification of the iOS simruntime may appear and completes its progess once and then gets stuck. Once you see that the popup does not progress anymore or the compiling takes too long, you may 'Ctrl + C' to exit and run the `flutter run -v' command again.
+
+   ![Screenshot](guide_images/compiling.png)
+
+   The process will open up Xcode application again automatically as part of the installation process.
 
 ## Running Federated Learning
 
-1. **Open the Flutter app** on your iPhone (using Sideloadly).
+Once the app is succesfully built and installed on your iPhone, you should see the following debug area in Xcode.
 
-2. **Start the Federated Learning Simulation** by clicking the corresponding button in the app. The app will:
+![Screenshot](guide_images/debug_view.png)
 
-   a. Perform a local model update.
+The app on your iPhone should load and show this screen:
+
+![Screenshot](guide_images/app_screenshot.PNG)
+
+1. First, test that the app is working by running a prediction with your input. Enter a movie review and click `Manual Predict`
+
+   It should show you the confidence level on whether your review tends to be positive or negative.
+
+2. Next, assuming your server is up and running, you can **start the Federated Learning** by inputting the number of rounds you wish to run the federated learning for. Then, click the corresponding button in the app. The app will:
+
+   a. Request a random subset of the training data from the Flask server and does a local model update.
    
-   b. Send model weights to the Flask server.
+   b. Once done training, send the updated model to the Flask server for model aggregation.
 
-   c. Receive the aggregated model back from the serve
+   c. Download the aggregated model from the server, compile, and load it for use.
+   
+   d. Request test data from the Flask server and evaluate the aggregated model on it.
 
-3. **Run the `TEST.ipynb` file in `server/` folder on Google Colab to see benchamark results**
+   e. Send the evaluation metrics to the server.
+
+   f. Concludes one round of federated learning and repeat for the user-specified rounds
+
+3. Once the app is done with federated learning, you will find in the `server/` folder the newly generated `federated_metrics_log.csv` and `centralized_model_metrics.csv`. You will also find the `benchmark.py` located there. Open the `benchmark.py` file in VSCode, right click on the file and click `Run Current File in interactive Window`. You will then see the results being visualized.
