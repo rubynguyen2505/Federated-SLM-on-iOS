@@ -341,7 +341,7 @@ Now, if you are using macOS virtual machine, open up a Terminal on the macOS env
 
    This command will build, sign your iOS app and install it on your iPhone.
 
-   Note that, the first time you run this command, you may get stuck at the `Compiling and Signing' phase as shown. A popup with verification of the iOS simruntime may appear and completes its progess once and then gets stuck. Once you see that the popup does not progress anymore or the compiling takes too long, you may 'Ctrl + C' to exit and run the `flutter run -v' command again.
+   Note that, the first time you run this command, you may get stuck at the `Compiling and Signing` phase as shown. A popup with verification of the iOS simruntime may appear and completes its progess once and then gets stuck. Once you see that the popup does not progress anymore or the compiling takes too long, you may `Ctrl + C` to exit and run the `flutter run -v` command again.
 
    ![Screenshot](guide_images/compiling.png)
 
